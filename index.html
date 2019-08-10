@@ -12,24 +12,24 @@
       margin : auto;
       }
     </style>
-  </head>  
+  </head>
   <body>
     <div class="content">
       <h1>&#x1f67e; Checker - coin stabilization technology for Tezos.</h1>
       <h2>FAQ</h2>
-      <ul>	  
+      <ul>
 	<li>
 	  <h3>What is Checker?</h3>
 	  <p>Checker is a software project implementing financial logic designed to
 	  help stabilize the value of a cryptographic coin with respect to an
-	  externally provided index.</p>	  
+	  externally provided index.</p>
 	</li>
 	<li>
 	  <h3>Is Checker a token or a coin of some sort? Is it a stablecoin?</h3>
 	  <p>No, Checker is a software project. The code base does define three
 	  different kinds of tokens and implements financial logic designed to
 	  stabilize the value of one of them with respect to an externally
-	  provided index or reference.</p>	  
+	  provided index or reference.</p>
 	</li>
 	<li>
 	  <h3>Is Checker a protocol amendment for Tezos?</h3>
@@ -53,7 +53,15 @@
 	<li>
 	  <h3>Is Checker like MakerDAO?</h3>
 	  <p>There are many similarities, but also important design
-	  differences.</p>
+	  differences. For instance, there is no reliance on a global
+	  settlement mechanism, and the terms under which collateral is
+	  pledged are more flexible.</p>
+	</li>
+	<li>
+	  <h3>If such a software were deployed, couldn't this create
+	  a concentration of baking power?</h3>
+	  <p>No. The system is designed such that, when tez is pledged, the baking
+	  rights are retained by the party pledging the collateral.</p>
 	</li>
 	<li>
 	  <h3>Is Checker like Tether</h3>
@@ -87,6 +95,10 @@
 	  said, this isn't merely trading off volatility for tail risk. </p>
 	</li>
 	<li>
+	  <h3>If there is a risk, their should be a risk discount, so how can their be a peg?</h3>
+	  <p>There is also a convenience premium. For some amount of supply, they cancel each other out.</p>
+	</li>
+	<li>
 	  <h3>Why is it called Checker</h3>
 	  <p>Checkers are simpler than chess, and the system is meant to be
 	  simple to understand and analyze. In addition, the name is easy to
@@ -104,7 +116,7 @@
 	<li>
 	  <h3>When will more information about Checker be available?</h3>
 	  <p>I don't know.</p>
-	</li>	
+	</li>
 	<li>
 	  <h3>Can I buy Checker?</h3>
 	  <p>The source code and other intellectual properties associated with
@@ -128,8 +140,8 @@
 	  financial risk modelling, stochastic calculus, and
 	  optimal control, I'd be happy to run some ideas by you.
 	  At this time, I'm not looking for any other type of help.</p>
-	</li>	  
+	</li>
       </ul>
-    </div>       
+    </div>
   </body>
 </html>
