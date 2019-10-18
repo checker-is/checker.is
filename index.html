@@ -28,10 +28,15 @@
 	</li>
 	<li>
 	  <h3>Is Checker a token or a coin of some sort? Is it a stablecoin?</h3>
-	  <p>No, Checker is a software project. The code base does define three
+	  <p>No, Checker is a software project. The code base does define two
 	  different kinds of tokens and implements financial logic designed to
 	  stabilize the value of one of them with respect to an externally
 	  provided index or reference.</p>
+	</li>
+	<li>
+	  <h3>Didn't there use to be three tokens?</h3>
+	  <p>As recently as October 2nd 2019, the design relied on three kinds of tokens but
+	  that is no longer the case.</p>
 	</li>
 	<li>
 	  <h3>Is Checker a protocol amendment for Tezos?</h3>
@@ -40,7 +45,9 @@
 	</li>
 	<li>
 	  <h3>Is there a white paper or source code available?</h3>
-	  <p>No, the details are still stealth.</p>
+	  <p>The details are still mostly stealth, but that's primarily
+	  because if a lot was out there, I might feel disinclined to change
+	  it even if warranted by further reflection.</p>
 	</li>
 	<li>
 	  <h3>Who is developing Checker?</h3>
@@ -50,14 +57,17 @@
 	  <h3>Does Checker implement an algorithmic stablecoin?</h3>
 	  <p>There doesn't seem to be an agreed upon definition on
 	  what that means. The closest existing project in terms of design
-	  is MakerDAO.</p>
+	  would be MakerDAO.</p>
 	</li>
 	<li>
 	  <h3>Is Checker like MakerDAO?</h3>
 	  <p>There are many similarities, but also important design
-	  differences. For instance, there is no reliance on a global
-	  settlement mechanism, and the terms under which collateral is
-	  pledged are more flexible.</p>
+	  differences. Notably there is no reliance on a global
+	  settlement mechanism and Checker can operate in a regime
+	  where the demand for holding the stablecoin exceeds the
+	  demand for locking up tez. One early consideration was making
+	  the terms under which tez is locked more flexible, but this
+	  has taken less prominance in further revisions.</p>
 	</li>
 	<li>
 	  <h3>If such a software were deployed, couldn't this create
@@ -79,6 +89,13 @@
 	  a cryptocurrency and indexed on an external metric provided by a set of oracles.</p>
 	</li>
 	<li>
+	  <h3>Doesn't using oracles defeat the purpose?</h3>
+	  <p>The need to rely on oracles is both unfortunate and unavoidable. It's certainly possible
+	  for these oracles to be decentralized to some extent, which adds resiliency to the system, but
+	  it by no means rules out the possibility of the oracle acting maliciously. Despite the
+	  reliance on oracles, the system does reduce the amount of trust involved.</p>
+	</li>
+	<li>
 	  <h3>Are you interested in designing a multi-collateral based system?</h3>
 	  <p>Not particularly. If the collateral is a claim on some off-chain assets,
 	  then you lose the censorship resistance aspect of an on-chain system.
@@ -87,9 +104,11 @@
 	</li>
 	<li>
 	  <h3>How can you get parity without convertibility?</h3>
-	  <p>You can't. As a result, a possible failure mode of the system is that the
-	  total supply of stabilized coins goes to 0. This is not a particularly dramatic
-	  outcome.</p>
+	  <p>You can't, the stabilization is relative and the stabilized coin may (slowly)
+	  drift with respect to the index. MakerDAO's Dai only achieves parity if participants
+	  are more interested in creating “CDPs” than in holding Dai for its convenience yield.
+	  Otherwise it gets traped into global settlements otherwise because of a zero-bound
+	  on the stability fee.</p>
 	</li>
 	<li>
 	  <h3>Does the financial logic guarantee the stability of a stablecoin?</h3>
@@ -110,6 +129,10 @@
 	<li>
 	  <h3>Is there a name for the coin that Checker attempts to stabilize?</h3>
 	  <p>"Kit", tentatively. Like a baby fox.</p>
+	</li>
+	<li>
+	  <h3>What happened to “draught”</h3>
+	  <p>It's been deprecated.</p>
 	</li>
 	<li>
 	  <h3>What is the purpose of this website?</h3>
@@ -135,13 +158,6 @@
 	<li>
 	  <h3>Are you raising money?</h3>
 	  <p>No.</p>
-	</li>
-	<li>
-	  <h3>How can I help?</h3>
-	  <p>If you have a strong background in microeconomics,
-	  financial risk modelling, stochastic calculus, and
-	  optimal control, I'd be happy to run some ideas by you.
-	  At this time, I'm not looking for any other type of help.</p>
 	</li>
       </ul>
     </div>

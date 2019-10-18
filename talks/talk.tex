@@ -1,0 +1,284 @@
+\documentclass[handout]{beamer}
+%\documentclass{beamer}
+
+\usepackage{multirow,array}
+
+%\usepackage[utf8]{inputenc}
+
+%\usepackage[T1]{fontenc}
+%\usepackage{mathabx}
+%\usepackage{mathpazo}
+%\usepackage{eulervm}
+\usepackage{textpos}
+%\usepackage{verbatim}
+\usepackage{hyperref}
+\usepackage{listings}
+
+\usepackage{textpos}
+%\usepackage{verbatim}
+\usepackage{hyperref}
+\usepackage{minitoc}
+\usepackage{fancyvrb}
+
+
+\usetheme{Warsaw}
+
+\setbeamercolor{normal text}{fg=white,bg=black!90}
+\setbeamercolor{structure}{fg=white}
+
+\setbeamercolor{alerted text}{fg=red!85!black}
+
+\setbeamercolor{item projected}{use=item,fg=black,bg=item.fg!35}
+
+\setbeamercolor*{palette primary}{use=structure,fg=structure.fg}
+\setbeamercolor*{palette secondary}{use=structure,fg=structure.fg!95!black}
+\setbeamercolor*{palette tertiary}{use=structure,fg=structure.fg!90!black}
+\setbeamercolor*{palette quaternary}{use=structure,fg=structure.fg!95!black,bg=black!80}
+
+\setbeamercolor*{framesubtitle}{fg=white}
+
+\setbeamercolor*{block title}{parent=structure,bg=black!60}
+\setbeamercolor*{block body}{fg=black,bg=black!10}
+\setbeamercolor*{block title alerted}{parent=alerted text,bg=black!15}
+\setbeamercolor*{block title example}{parent=example text,bg=black!15}
+
+\def\signed #1{{\leavevmode\unskip\nobreak\hfil\penalty50\hskip2em
+  \hbox{}\nobreak\hfil(#1)%
+  \parfillskip=0pt \finalhyphendemerits=0 \endgraf}}
+
+\newsavebox\mybox
+\newenvironment{aquote}[1]{\savebox\mybox{#1}\begin{quote}}{\signed{\usebox\mybox}\end{quote}}
+
+\newcommand{\yel}[
+  1]{{\color{yellow} #1}}
+
+
+%\setbeamertemplate{headline}[text line]{%
+%some text}
+%\setbeamertemplate{navigation symbols}{}
+
+
+%\setbeamertemplate{itemize items}[default]
+%\setbeamertemplate{enumerate items}[default]
+
+\useinnertheme{rectangles}
+
+\usefonttheme{serif}
+\usecolortheme{rose}
+
+\usepackage{fontspec}
+\setmainfont[AutoFakeSlant=0.3]{Code2000}
+
+
+\title{Checker}
+\author[@arthurb]{Arthur Breitman\\@arthurb}
+%\institute{Overleaf}
+
+\begin{document}
+
+
+\maketitle
+
+%\frame{\tableofcontents}
+
+%\setbeamertemplate{section in toc}[default]
+
+\AtBeginSection[]{%
+  \begin{frame}<beamer>
+    \frametitle{Outline}
+    \tableofcontents[sectionstyle=show/hide,subsectionstyle=hide/show/hide]
+  \end{frame}
+  \addtocounter{framenumber}{-1}% If you don't want them to affect the slide number
+}
+
+%\AtBeginSection[]{%
+%  \begin{frame}
+%    \frametitle{Outline}
+%    \tableofcontents[sectionstyle=show/hide,subsectionstyle=hide/show/hide]
+%  \end{frame}
+%  \addtocounter{framenumber}{-1}% If you don't want them to affect the slide number
+%}
+
+\section{Design goal}
+
+\begin{frame}{Disclaimer}
+  \begin{itemize}
+  \item These slides explore ideas for the design of a software \yel{technology}
+  \item Like all exploratory ideas these are subject to change
+  \item I may use \yel{loose vocabulary} and \yel{metaphors} to better convey ideas
+  \item These \yel{metaphors} break down past a certain point
+  \item The system should be understood based on what the actions its actually
+    programmed to take
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{What is Checker?}
+  \yel{Checker} is a \yel{software} technology for stabilizing a token with respect to an externally provided index.
+  Concretely:
+  \begin{itemize}
+  \item Defined as a Tezos smart-contract
+  \item Index can be any peg, e.g.
+    \begin{itemize}
+    \item Price of 1 oz t of gold in tez
+    \item Price of 1 HKD in tez
+    \item Viewcount of baby shark videos on January 1st 2030
+    \end{itemize}
+  \end{itemize}  
+\end{frame}
+
+\begin{frame}{Goals}
+  Primariy design goal is to \yel{minimize trust}:
+  \begin{itemize}
+  \item Minimize discretionary inputs: minimalistic governance
+  \item Minimize reliance on centralized point of failures: no centralized collateral
+  \item Minimize reliance on external actors
+  \end{itemize}
+  Design \yel{limits}:
+  \begin{itemize}
+  \item Peg can break
+  \item Parameter tuning is still worth having
+  \item Oracle feeds are a weak point
+  \end{itemize}
+\end{frame}
+
+\section{Design}
+
+\begin{frame}{Model Design}
+  \begin{itemize}
+  \item \yel{Modular} design to make it easier to reason about the system.
+  \item Relies on three different tokens
+    \begin{itemize}
+    \item Draught token
+    \item Checker token
+    \item \yel{Kits}
+    \end{itemize}    
+  \end{itemize}
+  \end{frame}
+
+\section{Draught}
+
+\begin{frame}{Locking tez}
+  Locking tez in Draught. User selects:
+  \begin{itemize}
+  \item Locking \yel{time} (e.g 1 day, 1 month, 1 year)
+  \item Unlocking \yel{amount} (e.g. spend 100 kit to unlock)
+  \item Forfeit \yel{threshold} (e.g. 120 kit worth of tez)
+  \end{itemize}
+  Draught contract offers some amount of kits to the user
+  based on the above variables and an internal \yel{model}.
+  \begin{itemize}
+  \item Draught contract sends kits (fewer than the unlocking amount)
+  \item Tez is locked. \emph{User still controls delegation}.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Draught}
+  Users locking tez interact with a \yel{Draught} contract
+  \begin{itemize}
+  \item Draught model determined by tunable parameters
+  \item Draught is itself \yel{tokenized} in draught tokens
+  \item Draught targets fixed kit holding, e.g. 5\%
+    \begin{itemize}
+    \item Cannot create or destroy kit
+    \item Maintain enough kit to interact with users
+    \item Create draught tokens and auction for kit
+    \item Or auction kit for draught and burn
+    \end{itemize}
+  \item If user forfeits tez, tez held by Draught is auctionned off for kit
+  \end{itemize}
+\end{frame}
+
+\section{Checker}
+
+\begin{frame}{Checker}
+  Checker is also a tokenized contract. Tokens have a dual purpose.
+  \begin{itemize}
+    \item \yel{Governance}
+      \begin{itemize}
+      \item Used to vote on Draught parameters
+      \item Used to select an oracle feed
+      \end{itemize}
+    \item \yel{Stabilization}
+      \begin{itemize}
+      \item If kit above beg, \yel{mint kit}, auction off for checker tokens, burn
+      \item If kit below beg, \yel{mint checker tokens}, auction off for kit, burn
+      \item \emph{Acquire draught tokens\ldots}
+      \end{itemize}
+  \end{itemize}      
+\end{frame}
+
+\begin{frame}{Checker and draught}
+  Would this stabilization mechanism work by itself? Sort of \ldots
+  \begin{itemize}
+    \item Checker holders may want to minimize dilution
+    \item Rational course of action:\\
+      mint checker tokens, exchange for draught tokens
+    \item Don't rely on business acumen, automate the process
+  \end{itemize}
+  How to automate?
+  \begin{itemize}
+  \item Draught exports \yel{kit unlock amount} per token
+  \item Checker automatically mints checker tokens and auctions them off for draught tokens
+  \item Checker has no privileged access to Draught \yel{tokens}!
+  \end{itemize}
+\end{frame}
+
+\section{Misc}
+
+\begin{frame}{Auctions}
+  How does a smart-contract exchange one kind of token for another? Auctions
+  \begin{itemize}
+  \item \yel{Simple} to analyze
+  \item Descending auction is \yel{gas sparing}
+  \item Typical horizon on the order of days
+  \item Alternatives (e.g. Dexter) assume liquidity
+  \item Downside: slow
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Oracle feed}
+  Contract needs two oracle feed
+  \begin{itemize}
+  \item \yel{tez} with respect to peg
+  \item \yel{kit} with respect to tez
+  \end{itemize}
+  A few remarks
+  \begin{itemize}
+  \item Second one observable on-chain
+  \item Oracle construction is out of scope for Checker
+    \begin{itemize}
+    \item Median of 5 reputable sources
+    \item Decentralized Oracle à la Augur
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{What about MakerDAO?}
+  \begin{itemize}
+  \item Similar to MakerDAO with a few key differences as outlined above
+  \item Pretty much the only reasonable category of design for this
+  \item Dai has survived very wild periods relatively unscathed
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Failure scenarios}
+  Here are a few ways in which this can break down
+  \begin{itemize}
+  \item Malicious \yel{mispricing} from oracle feed 
+  \item Forfeitures \yel{spiral}
+  \item Demand for kit can outstrip interest for locking tez\\
+    \yel{this is the weird / important one}
+  \item Draught token cornered
+  \item Checker governance picking loose Draught parameters
+  \item Implementation \yel{bugs}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Questions}
+  Questions ?
+\end{frame}
+  
+
+
+  
+\end{document}
