@@ -27,14 +27,17 @@ Intuitively, if the target $p_{t_i}$ is below $1$, then kits are, in a sense “
 
 ### The instantaneous drift
 
-At any point in time, the system defines a dimensionless, time-varying, instantaneous drift, $d_{t}$. The drift is implicitely piecewise-linear between two clock ticks:
-$$t_{i} < t < t_{i+1} \Rightarrow d_{t} = \frac{(t_{i+1}-t)d_{t_i} + (t-t_i)d_{t_{i+1}}}{t_{i+1}-t_i}$$.
+At any point in time, the system defines a dimensionless, time-varying, instantaneous drift, $d_{t}$. The drift is implicitely continuous, piecewise-quadratic between two clock ticks with continuous derivatives. Essentially, our control mechanism provides us with the derivative of $d$ at clock ticks and we interpolate quadratically between those points. The initial values of $d$ and $d'$ do not matter as the system adjusts automatically and can be taken to both be $0$.
+
+$d'_{t_{i+1}}$ is computed as defined in the "algorithmic control section" and $d_{t_{i+1}}$ is determined as:
+
+$$d_{t_{i+1}} = d_{t_i} + \frac{1}{2}(d'_{t_i} + d'_{t_{i+1}})(t_{i+1} - t_i)$$
 
 The drift is applied to the quantity such that $q'(t) = d(t) q(t)$, hence:
 
-$$q_{t_{i+1}} = q_{t_i} \textrm{exp}\left(\frac{d_{t_i}+d_{t_{i+1}}}{2}(t_{i+1}-t_i)\right)$$
+$$q_{t_{i+1}} = q_{t_i} \textrm{exp}\left(\left(d_{t_i} + \frac{1}{6}(2 d'_{t_i}+d'_{t_{i+1}})(t_{i+1}-t_{i})\right)(t_{i+1}-t_i)\right)$$
 
-The presence of the average between $d_{t_i}$ and $d_{t_{i+1}}$ comes from the piecewise linear model for $d_t$.
+The term before $(t_{i+1}-t_i)$ is simply the average of the quadratic over the period.
 
 ### Oracles
 
@@ -82,7 +85,7 @@ Consider the measure of imbalance $$\log p_t = \log(q_t tz_t / k_t)$$
 
 All logarithm values are expressed in cNp or centinepers (for small values, a centineper is almost the same as a percentage point so you can safely read 2 cNp and 2% as roughly the same thing).
 
-We define the rate of change of the drift $d_t$ as $d'_t$. At any point in time $d'_t$ is defined based on the imbalance:
+We define the rate of change of the drift $d_t$ as $d'_t$. At any clock tick $t$, $d'_t$ is defined based on the imbalance:
 
 $$
 \left\{\begin{array}{ccc}
