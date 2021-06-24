@@ -1,0 +1,361 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Liquidation Auctions &mdash; Checker 0.1alpha documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="CFMM subsystem" href="cfmm.html" />
+    <link rel="prev" title="Burrow State &amp; Liquidation" href="burrow-state-liquidations.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Checker
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1alpha
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="design.html">Design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functional_spec.html">Functional Specification</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="operational.html">Operational descriptions</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="system-parameters.html">System Parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="burrow-state-liquidations.html">Burrow State &amp; Liquidation</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Liquidation Auctions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#state">State</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#initiating-a-liquidation">Initiating a liquidation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cancelling-a-liquidation-slice">Cancelling a liquidation slice</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lot-auction">Lot auction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#touching-a-liquidation-slice">Touching a liquidation_slice</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#claiming-a-winning-bid">Claiming a winning bid</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#maintenance">Maintenance</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cfmm.html">CFMM subsystem</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="deploying.html">Deploying Checker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="glossary.html">Glossary</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Checker</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="operational.html">Operational descriptions</a> &raquo;</li>
+        
+      <li>Liquidation Auctions</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/liquidation-auction.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="liquidation-auctions">
+<h1>Liquidation Auctions<a class="headerlink" href="#liquidation-auctions" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="state">
+<h2>State<a class="headerlink" href="#state" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">queued_slices</span></code>: a queue of liquidation slices awaiting an auction.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">current_auction</span></code>: information about the current auction if there
+is an active auction.</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">contents</span></code>: set of slices in the current auction.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">auction_state</span></code>: whether the auction is in the descending or
+ascending phase, and data used to calculate the current price.</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">completed_auctions</span></code>: a queue of completed auctions, each auction
+containing:</p>
+<ul>
+<li><p>a set of untouched slices</p></li>
+<li><p>the result of an auction, containing the amount of tez sold,
+amount of kit gained and the winner of an auction.</p></li>
+</ul>
+</li>
+</ul>
+<p>At any point in time, any liquidation slice is in only one of the above
+sets, and they always move from <code class="docutils literal notranslate"><span class="pre">queued_slices</span></code>, to
+<code class="docutils literal notranslate"><span class="pre">current_auction</span></code> and then to <code class="docutils literal notranslate"><span class="pre">completed_auctions</span></code>, (then they
+disappear). Additionally, this move always happens in order, so an older
+liquidation_slice is always further in the process than a younger one.</p>
+<p>NOTE: <em>Per-burrow liquidation_slices</em> We need to have access to the
+liquidation slices for a specific burrow; so slices for a burrow form a
+doubly-linked list, each burrow storing a pair of pointers called
+<code class="docutils literal notranslate"><span class="pre">liquidation_slices</span></code>, pointing to the first and the last liquidation
+slice of that burrow (if they exist).</p>
+<p>See &lt;./avl_diagram.drawio&gt; file for an illustration.</p>
+</div>
+<div class="section" id="initiating-a-liquidation">
+<h2>Initiating a liquidation<a class="headerlink" href="#initiating-a-liquidation" title="Permalink to this headline">¶</a></h2>
+<p>When liquidation of a burrow is triggered, the amount of tez to be
+liquidated form a <code class="docutils literal notranslate"><span class="pre">liquidation_slice</span></code>. * For details about this
+process, see &lt;./burrow-state-liquidations.md&gt;.</p>
+<p>The new slice is added to the back of the <code class="docutils literal notranslate"><span class="pre">queued_slices</span></code>.</p>
+<ul class="simple">
+<li><p>NOTE: This operation also updates the per-burrow linked list.</p></li>
+</ul>
+</div>
+<div class="section" id="cancelling-a-liquidation-slice">
+<h2>Cancelling a liquidation slice<a class="headerlink" href="#cancelling-a-liquidation-slice" title="Permalink to this headline">¶</a></h2>
+<p>Burrows can cancel auctioning off their liquidation slices on certain
+conditions. When cancelling a slice, we check if the slice belongs to
+the <code class="docutils literal notranslate"><span class="pre">queued_slices</span></code>, if so, remove it from the set (returning contents
+back to the burrow). If not, the process fails.</p>
+<ul class="simple">
+<li><p>NOTE: This operation also updates the per-burrow linked list.</p></li>
+<li><p>NOTE: This requires a the queue to have an efficient membership test.</p></li>
+<li><p>NOTE: This requires a the queue to support efficient random deletes.</p></li>
+</ul>
+</div>
+<div class="section" id="lot-auction">
+<h2>Lot auction<a class="headerlink" href="#lot-auction" title="Permalink to this headline">¶</a></h2>
+<p>At any time checker is touched, when there is no auction running and
+there is at least one queued slice, we start an auction.</p>
+<p>Our aim is to take a prefix of the <code class="docutils literal notranslate"><span class="pre">queued_slices</span></code> queue which
+contains exactly below amount of tez:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">min</span>
+  <span class="n">total_queued_tez</span>
+  <span class="p">(</span><span class="nb">max</span>
+    <span class="n">Constant</span><span class="o">.</span><span class="n">max_lot_size</span>
+    <span class="p">(</span><span class="n">total_queued_tez</span> <span class="o">*</span> <span class="n">Constants</span><span class="o">.</span><span class="n">min_lot_auction_queue_fraction</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>However, it is likely that in this process the slices will not add up to
+the exact amount. In this case, we take the liquidation_slice causing
+the overload, split it into two, and push the halves to end of the
+prefix and in front of the <code class="docutils literal notranslate"><span class="pre">queued_slices</span></code>.</p>
+<ul class="simple">
+<li><p>NOTE: This splitting process has to be efficient, since a single
+auction likely consists of many small slices. So it needs to be done
+without traversing the entire prefix. This pretty much forces us to
+use a tree-like structure with branches containing the aggregate tez
+information of their sub-trees.</p></li>
+</ul>
+<p>Then we start an auction. An auction has minimum_bid value that is a
+function of current time and the latest bid.</p>
+<p>Every bid should be at least of <code class="docutils literal notranslate"><span class="pre">minimum_bid</span></code> amount of kit. Bidding
+process returns a bid token that can be sent back to claim either the
+bid itself when beaten, or the result of an auction (details will follow
+for this case).</p>
+<p>The latest bid always becomes <code class="docutils literal notranslate"><span class="pre">leading_bid</span></code>. If a bid is not a leading
+bid of any current or past auction, they can be claimed back.</p>
+<p>The auction is initially a <strong>descending</strong> auction, with the minimum bid
+calculated as:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">amount_of_tez_inside_auction</span>
+  <span class="o">*</span> <span class="n">tz_minting</span>
+  <span class="o">*</span> <span class="n">q</span>
+  <span class="o">*</span> <span class="p">((</span><span class="mi">1</span> <span class="o">-</span> <span class="n">Constants</span><span class="o">.</span><span class="n">auction_decay_rate</span><span class="p">)</span> <span class="o">^</span> <span class="n">time_elapsed_since_auction_start</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>After the first bid, it becomes an <strong>ascending</strong> auction, with the
+minimum bid calculated as:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">leading_bid</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="n">Constants</span><span class="o">.</span><span class="n">bid_improvement_factor</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The auction finishes when the longer of 20 blocks or 20 minutes are
+passed after the last bid.</p>
+</div>
+<div class="section" id="touching-a-liquidation-slice">
+<h2>Touching a liquidation_slice<a class="headerlink" href="#touching-a-liquidation-slice" title="Permalink to this headline">¶</a></h2>
+<p>“Touching the liquidation slice” is the process of propagating the
+result of a completed auction back to the burrows. When it is triggered,
+we:</p>
+<ol class="arabic simple">
+<li><p>Check if the given slice belongs to a completed auction, ignore
+otherwise.</p></li>
+<li><p>Remove the slice from the contents of the relevant completed_auction.</p></li>
+<li><p>Remove the slice from the linked list at relevant burrows
+<code class="docutils literal notranslate"><span class="pre">liquidation_slices</span></code>.</p></li>
+</ol>
+</div>
+<div class="section" id="claiming-a-winning-bid">
+<h2>Claiming a winning bid<a class="headerlink" href="#claiming-a-winning-bid" title="Permalink to this headline">¶</a></h2>
+<p>If a bid is the winning bid of a completed auction where all the
+liquidation_slices are touched (in other words, contents are empty), the
+winner can claim the winning bid. This process is the final step of an
+auction, and after that the auction itself is cleaned up.</p>
+</div>
+<div class="section" id="maintenance">
+<h2>Maintenance<a class="headerlink" href="#maintenance" title="Permalink to this headline">¶</a></h2>
+<p>Every time the main checker contract is touched, it touches
+<code class="docutils literal notranslate"><span class="pre">Constants.number_of_slices_to_process</span></code> amount of oldest
+liquidation_slice’s automatically.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="cfmm.html" class="btn btn-neutral float-right" title="CFMM subsystem" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="burrow-state-liquidations.html" class="btn btn-neutral float-left" title="Burrow State &amp; Liquidation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Nomadic Labs / Tweag.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

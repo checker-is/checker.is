@@ -1,0 +1,987 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Functional Specification &mdash; Checker 0.1alpha documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Operational descriptions" href="operational.html" />
+    <link rel="prev" title="Design" href="design.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Checker
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1alpha
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="design.html">Design</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Functional Specification</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#working-with-burrows">Working with burrows</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#create-a-burrow">Create a burrow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#deposit-collateral-in-a-burrow">Deposit collateral in a burrow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#withdraw-collateral-from-a-burrow">Withdraw collateral from a burrow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mint-kit">Mint kit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#burn-kit">Burn kit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#deactivate-a-burrow">Deactivate a burrow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#activate-an-inactive-burrow">Activate an inactive burrow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#perform-burrow-maintenance">Perform burrow maintenance</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#set-the-delegate-for-a-burrow">Set the delegate for a burrow</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#cfmm-exchange">CFMM Exchange</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#buy-kit-using-ctez">Buy kit using ctez</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sell-kit-for-ctez">Sell kit for ctez</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#provide-liquidity">Provide liquidity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#withdraw-liquidity">Withdraw liquidity</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#liquidation-auctions">Liquidation Auctions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#mark-a-burrow-for-liquidation">Mark a burrow for liquidation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#process-completed-liquidation-slices">Process completed liquidation slices</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cancel-pending-liquidation-slices">Cancel pending liquidation slices</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#bid-in-the-current-liquidation-auction">Bid in the current liquidation auction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#claim-the-collateral-from-a-winning-auction-bid">Claim the collateral from a winning auction bid</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#gather-won-collateral-for-a-subsequent-claim">Gather won collateral for a subsequent claim</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#maintenance-entrypoints">Maintenance entrypoints</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#perform-checker-internal-maintenance">Perform Checker internal maintenance</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#apply-an-oracle-update">Apply an Oracle update</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#fa1-2-interface">FA1.2 Interface</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#query-balance">Query balance</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#update-operators">Update operators</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#fa2-views">FA2 Views</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#standard-fa2-views">Standard FA2 views</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#estimate-yield-when-buying-kit-with-ctez">Estimate yield when buying kit with ctez</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#estimate-yield-when-selling-kit-for-ctez">Estimate yield when selling kit for ctez</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#estimate-kit-requirements-when-adding-liquidity">Estimate kit requirements when adding liquidity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#estimate-yield-when-adding-liquidity">Estimate yield when adding liquidity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#estimate-ctez-yield-when-removing-liquidity">Estimate ctez yield when removing liquidity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#estimate-kit-yield-when-removing-liquidity">Estimate kit yield when removing liquidity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#find-maximum-kit-that-can-be-minted">Find maximum kit that can be minted</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#check-whether-a-burrow-is-overburrowed">Check whether a burrow is overburrowed</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#check-whether-a-burrow-can-be-liquidated">Check whether a burrow can be liquidated</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#minimum-bid-for-the-current-liquidation-auction-if-exists">Minimum bid for the current liquidation auction (if exists)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#deployment">Deployment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#deploy-a-lazy-function">Deploy a lazy function</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#deploy-metadata">Deploy metadata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#seal-the-contract-and-make-it-ready-for-use">Seal the contract and make it ready for use</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="operational.html">Operational descriptions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="deploying.html">Deploying Checker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="glossary.html">Glossary</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Checker</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Functional Specification</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/functional_spec.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="functional-specification">
+<h1>Functional Specification<a class="headerlink" href="#functional-specification" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="working-with-burrows">
+<h2>Working with burrows<a class="headerlink" href="#working-with-burrows" title="Permalink to this headline">¶</a></h2>
+<p>Burrows are implicitly associated with their owner via the caller’s
+address. A caller can operate multiple burrows over time: owners are
+expected to identify each burrow uniquely with an arbitrary numeric ID
+they supply. These numbers need not be contiguous.</p>
+<div class="section" id="create-a-burrow">
+<h3>Create a burrow<a class="headerlink" href="#create-a-burrow" title="Permalink to this headline">¶</a></h3>
+<p>Create and return a new burrow containing the supplied tez as collateral,
+minus the creation deposit. Fail if the tez is not enough to cover the
+creation deposit.</p>
+<p><code class="docutils literal notranslate"><span class="pre">create_burrow:</span> <span class="pre">(pair</span> <span class="pre">nat</span> <span class="pre">(option</span> <span class="pre">key_hash))</span></code></p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 21%" />
+<col style="width: 66%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Field Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>id</p></td>
+<td><p>nat</p></td>
+<td><p>An arbitrary number to identify the burrow among the caller’s burrows</p></td>
+</tr>
+<tr class="row-odd"><td><p>delegate</p></td>
+<td><p>option key_hash</p></td>
+<td><p>An optional delegate for the created burrow contract</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="deposit-collateral-in-a-burrow">
+<h3>Deposit collateral in a burrow<a class="headerlink" href="#deposit-collateral-in-a-burrow" title="Permalink to this headline">¶</a></h3>
+<p>Deposit a non-negative amount of tez as collateral to a burrow. Fail if
+the burrow does not exist, or if the sender is not the burrow owner.</p>
+<p><code class="docutils literal notranslate"><span class="pre">deposit_tez:</span> <span class="pre">nat</span></code></p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 21%" />
+<col style="width: 66%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Field Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>id</p></td>
+<td><p>nat</p></td>
+<td><p>The caller’s ID for the burrow in which to deposit the tez</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="withdraw-collateral-from-a-burrow">
+<h3>Withdraw collateral from a burrow<a class="headerlink" href="#withdraw-collateral-from-a-burrow" title="Permalink to this headline">¶</a></h3>
+<p>Withdraw a non-negative amount of tez from a burrow. Fail if the burrow
+does not exist, if this action would overburrow it, or if the sender is not
+the burrow owner.</p>
+<p><code class="docutils literal notranslate"><span class="pre">withdraw_tez:</span> <span class="pre">(pair</span> <span class="pre">mutez</span> <span class="pre">nat)</span></code></p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 21%" />
+<col style="width: 66%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Field Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>amount</p></td>
+<td><p>mutez</p></td>
+<td><p>The amount of collateral to withdraw</p></td>
+</tr>
+<tr class="row-odd"><td><p>id</p></td>
+<td><p>nat</p></td>
+<td><p>The caller’s ID for the burrow from which to withdraw the tez</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="mint-kit">
+<h3>Mint kit<a class="headerlink" href="#mint-kit" title="Permalink to this headline">¶</a></h3>
+<p>Mint kits from a specific burrow. Fail if the burrow does not exist, if
+there is not enough collateral, or if the sender is not the burrow owner.</p>
+<p><code class="docutils literal notranslate"><span class="pre">mint_kit:</span> <span class="pre">(pair</span> <span class="pre">nat</span> <span class="pre">nat)</span></code></p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 21%" />
+<col style="width: 66%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Field Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>id</p></td>
+<td><p>nat</p></td>
+<td><p>The caller’s ID for the burrow in which to mint the kit</p></td>
+</tr>
+<tr class="row-odd"><td><p>amount</p></td>
+<td><p>nat</p></td>
+<td><p>The amount of kit to mint, in mukit</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="burn-kit">
+<h3>Burn kit<a class="headerlink" href="#burn-kit" title="Permalink to this headline">¶</a></h3>
+<p>Deposit/burn a non-negative amount of kit to a burrow. If there is excess
+kit, simply store it into the burrow. Fail if the burrow does not exist, or
+if the sender is not the burrow owner.</p>
+<p><code class="docutils literal notranslate"><span class="pre">burn_kit:</span> <span class="pre">(pair</span> <span class="pre">nat</span> <span class="pre">nat)</span></code></p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 21%" />
+<col style="width: 66%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Field Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>id</p></td>
+<td><p>nat</p></td>
+<td><p>The caller’s ID for the burrow in which to burn the kit</p></td>
+</tr>
+<tr class="row-odd"><td><p>amount</p></td>
+<td><p>nat</p></td>
+<td><p>The amount of kit to burn, in mukit</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="deactivate-a-burrow">
+<h3>Deactivate a burrow<a class="headerlink" href="#deactivate-a-burrow" title="Permalink to this headline">¶</a></h3>
+<p>Deactivate a currently active burrow. Fails if the burrow does not exist,
+if it is already inactive, if it is overburrowed, if it has kit
+outstanding, if it has collateral sent off to auctions, or if the sender is
+not the burrow owner. If deactivation is successful, make a tez payment to
+the given address.</p>
+<p><code class="docutils literal notranslate"><span class="pre">deactivate_burrow:</span> <span class="pre">nat</span></code></p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 21%" />
+<col style="width: 66%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Field Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>id</p></td>
+<td><p>nat</p></td>
+<td><p>The caller’s ID for the burrow to deactivate</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="activate-an-inactive-burrow">
+<h3>Activate an inactive burrow<a class="headerlink" href="#activate-an-inactive-burrow" title="Permalink to this headline">¶</a></h3>
+<p>Activate a currently inactive burrow. Fail if the burrow does not exist,
+if the burrow is already active, if the amount of tez given is less than
+the creation deposit, or if the sender is not the burrow owner.</p>
+<p><code class="docutils literal notranslate"><span class="pre">activate_burrow:</span> <span class="pre">nat</span></code></p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 21%" />
+<col style="width: 66%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Field Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>id</p></td>
+<td><p>nat</p></td>
+<td><p>The caller’s ID for the burrow to activate</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="perform-burrow-maintenance">
+<h3>Perform burrow maintenance<a class="headerlink" href="#perform-burrow-maintenance" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">touch_burrow:</span> <span class="pre">(pair</span> <span class="pre">address</span> <span class="pre">nat)</span></code></p>
+</div>
+<div class="section" id="set-the-delegate-for-a-burrow">
+<h3>Set the delegate for a burrow<a class="headerlink" href="#set-the-delegate-for-a-burrow" title="Permalink to this headline">¶</a></h3>
+<p>Set the delegate of a burrow. Fail if if the sender is not the burrow
+owner.</p>
+<p><code class="docutils literal notranslate"><span class="pre">set_burrow_delegate:</span> <span class="pre">(pair</span> <span class="pre">nat</span> <span class="pre">(option</span> <span class="pre">key_hash))</span></code></p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 21%" />
+<col style="width: 66%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Field Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>id</p></td>
+<td><p>nat</p></td>
+<td><p>The caller’s ID for the burrow</p></td>
+</tr>
+<tr class="row-odd"><td><p>delegate</p></td>
+<td><p>option key_hash</p></td>
+<td><p>The key_hash of the new delegate’s address, or none</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="cfmm-exchange">
+<h2>CFMM Exchange<a class="headerlink" href="#cfmm-exchange" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="buy-kit-using-ctez">
+<h3>Buy kit using ctez<a class="headerlink" href="#buy-kit-using-ctez" title="Permalink to this headline">¶</a></h3>
+<p>Buy some kit from the CFMM contract in exchange for ctez. Fail if the
+desired amount of kit cannot be bought or if the deadline has passed.</p>
+<p><code class="docutils literal notranslate"><span class="pre">buy_kit:</span> <span class="pre">(pair</span> <span class="pre">(pair</span> <span class="pre">nat</span> <span class="pre">nat)</span> <span class="pre">timestamp)</span></code></p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 21%" />
+<col style="width: 66%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Field Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>ctez</p></td>
+<td><p>nat</p></td>
+<td><p>An amount of ctez to be sold for kit, in muctez</p></td>
+</tr>
+<tr class="row-odd"><td><p>kit</p></td>
+<td><p>nat</p></td>
+<td><p>The minimum amount of kit expected to be bought, in mukit</p></td>
+</tr>
+<tr class="row-even"><td><p>deadline</p></td>
+<td><p>timestamp</p></td>
+<td><p>The deadline for the transaction to be valid</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="sell-kit-for-ctez">
+<h3>Sell kit for ctez<a class="headerlink" href="#sell-kit-for-ctez" title="Permalink to this headline">¶</a></h3>
+<p>Sell some kit in exchange for ctez. Fail if the desired amount of ctez
+cannot be bought or if the deadline has passed.</p>
+<p><code class="docutils literal notranslate"><span class="pre">sell_kit:</span> <span class="pre">(pair</span> <span class="pre">(pair</span> <span class="pre">nat</span> <span class="pre">nat)</span> <span class="pre">timestamp)</span></code></p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 21%" />
+<col style="width: 66%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Field Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>kit</p></td>
+<td><p>nat</p></td>
+<td><p>The amount of kit to be sold, in mukit</p></td>
+</tr>
+<tr class="row-odd"><td><p>ctez</p></td>
+<td><p>nat</p></td>
+<td><p>The minimum amount of ctez expected to be bought, in muctez</p></td>
+</tr>
+<tr class="row-even"><td><p>deadline</p></td>
+<td><p>timestamp</p></td>
+<td><p>The deadline for the transaction to be valid</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="provide-liquidity">
+<h3>Provide liquidity<a class="headerlink" href="#provide-liquidity" title="Permalink to this headline">¶</a></h3>
+<p>Deposit some ctez and kit for liquidity in exchange for receiving
+liquidity tokens. If the given amounts do not have the right ratio,
+the CFMM contract keeps all the ctez given and as much of the given kit as
+possible with the right ratio, and returns the leftovers, along with the
+liquidity tokens.</p>
+<p><code class="docutils literal notranslate"><span class="pre">add_liquidity:</span> <span class="pre">(pair</span> <span class="pre">(pair</span> <span class="pre">nat</span> <span class="pre">nat)</span> <span class="pre">nat</span> <span class="pre">timestamp)</span></code></p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 21%" />
+<col style="width: 66%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Field Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>ctez</p></td>
+<td><p>nat</p></td>
+<td><p>The amount of ctez to supply as liquidity, in muctez</p></td>
+</tr>
+<tr class="row-odd"><td><p>kit</p></td>
+<td><p>nat</p></td>
+<td><p>The maximum amount of kit to supply as liquidity, in mukit</p></td>
+</tr>
+<tr class="row-even"><td><p>min_tokens</p></td>
+<td><p>nat</p></td>
+<td><p>The minimum number of liquidity tokens expected to be bought, in mulqt</p></td>
+</tr>
+<tr class="row-odd"><td><p>deadline</p></td>
+<td><p>timestamp</p></td>
+<td><p>The deadline for the transaction to be valid</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="withdraw-liquidity">
+<h3>Withdraw liquidity<a class="headerlink" href="#withdraw-liquidity" title="Permalink to this headline">¶</a></h3>
+<p>Redeem some liquidity tokens in exchange for ctez and kit in the right
+ratio.</p>
+<p><code class="docutils literal notranslate"><span class="pre">remove_liquidity:</span> <span class="pre">(pair</span> <span class="pre">(pair</span> <span class="pre">nat</span> <span class="pre">nat)</span> <span class="pre">nat</span> <span class="pre">timestamp)</span></code></p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 21%" />
+<col style="width: 66%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Field Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>amount</p></td>
+<td><p>nat</p></td>
+<td><p>The number of liquidity tokens to redeem, in mulqt</p></td>
+</tr>
+<tr class="row-odd"><td><p>ctez</p></td>
+<td><p>nat</p></td>
+<td><p>The minimum amount of ctez expected, in muctez</p></td>
+</tr>
+<tr class="row-even"><td><p>kit</p></td>
+<td><p>nat</p></td>
+<td><p>The minimum amount of kit expected, in mukit</p></td>
+</tr>
+<tr class="row-odd"><td><p>deadline</p></td>
+<td><p>timestamp</p></td>
+<td><p>The deadline for the transaction to be valid</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="liquidation-auctions">
+<h2>Liquidation Auctions<a class="headerlink" href="#liquidation-auctions" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="mark-a-burrow-for-liquidation">
+<h3>Mark a burrow for liquidation<a class="headerlink" href="#mark-a-burrow-for-liquidation" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">mark_for_liquidation:</span> <span class="pre">(pair</span> <span class="pre">address</span> <span class="pre">nat)</span></code></p>
+</div>
+<div class="section" id="process-completed-liquidation-slices">
+<h3>Process completed liquidation slices<a class="headerlink" href="#process-completed-liquidation-slices" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">touch_liquidation_slices:</span> <span class="pre">(list</span> <span class="pre">int)</span></code></p>
+</div>
+<div class="section" id="cancel-pending-liquidation-slices">
+<h3>Cancel pending liquidation slices<a class="headerlink" href="#cancel-pending-liquidation-slices" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">cancel_liquidation_slice:</span> <span class="pre">int</span></code></p>
+</div>
+<div class="section" id="bid-in-the-current-liquidation-auction">
+<h3>Bid in the current liquidation auction<a class="headerlink" href="#bid-in-the-current-liquidation-auction" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">liquidation_auction_place_bid:</span> <span class="pre">(pair</span> <span class="pre">nat</span> <span class="pre">nat)</span></code></p>
+</div>
+<div class="section" id="claim-the-collateral-from-a-winning-auction-bid">
+<h3>Claim the collateral from a winning auction bid<a class="headerlink" href="#claim-the-collateral-from-a-winning-auction-bid" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">liquidation_auction_claim_win:</span> <span class="pre">int</span></code></p>
+</div>
+<div class="section" id="gather-won-collateral-for-a-subsequent-claim">
+<h3>Gather won collateral for a subsequent claim<a class="headerlink" href="#gather-won-collateral-for-a-subsequent-claim" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">receive_slice_from_burrow:</span> <span class="pre">(pair</span> <span class="pre">address</span> <span class="pre">nat)</span></code></p>
+</div>
+</div>
+<div class="section" id="maintenance-entrypoints">
+<h2>Maintenance entrypoints<a class="headerlink" href="#maintenance-entrypoints" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="perform-checker-internal-maintenance">
+<h3>Perform Checker internal maintenance<a class="headerlink" href="#perform-checker-internal-maintenance" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">touch:</span> <span class="pre">unit</span></code></p>
+</div>
+<div class="section" id="apply-an-oracle-update">
+<h3>Apply an Oracle update<a class="headerlink" href="#apply-an-oracle-update" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">receive_price:</span> <span class="pre">nat</span></code></p>
+</div>
+</div>
+<div class="section" id="fa1-2-interface">
+<h2>FA1.2 Interface<a class="headerlink" href="#fa1-2-interface" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="query-balance">
+<h3>Query balance<a class="headerlink" href="#query-balance" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">balance_of</span><span class="p">:</span> <span class="p">(</span><span class="n">pair</span> <span class="p">(</span><span class="nb">list</span> <span class="o">%</span><span class="n">requests</span> <span class="p">(</span><span class="n">pair</span> <span class="p">(</span><span class="n">address</span> <span class="o">%</span><span class="n">owner</span><span class="p">)</span> <span class="p">(</span><span class="n">nat</span> <span class="o">%</span><span class="n">token_id</span><span class="p">)))</span>
+                  <span class="p">(</span><span class="n">contract</span> <span class="o">%</span><span class="n">callback</span>
+                     <span class="p">(</span><span class="nb">list</span> <span class="p">(</span><span class="n">pair</span> <span class="p">(</span><span class="n">pair</span> <span class="o">%</span><span class="n">request</span> <span class="p">(</span><span class="n">address</span> <span class="o">%</span><span class="n">owner</span><span class="p">)</span> <span class="p">(</span><span class="n">nat</span> <span class="o">%</span><span class="n">token_id</span><span class="p">))</span> <span class="p">(</span><span class="n">nat</span> <span class="o">%</span><span class="n">balance</span><span class="p">)))))</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="update-operators">
+<h3>Update operators<a class="headerlink" href="#update-operators" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">update_operators</span><span class="p">:</span> <span class="p">(</span><span class="nb">list</span> <span class="p">(</span><span class="ow">or</span> <span class="p">(</span><span class="n">pair</span> <span class="o">%</span><span class="n">add_operator</span> <span class="p">(</span><span class="n">address</span> <span class="o">%</span><span class="n">owner</span><span class="p">)</span> <span class="p">(</span><span class="n">address</span> <span class="o">%</span><span class="n">operator</span><span class="p">)</span> <span class="p">(</span><span class="n">nat</span> <span class="o">%</span><span class="n">token_id</span><span class="p">))</span>
+                           <span class="p">(</span><span class="n">pair</span> <span class="o">%</span><span class="n">remove_operator</span> <span class="p">(</span><span class="n">address</span> <span class="o">%</span><span class="n">owner</span><span class="p">)</span> <span class="p">(</span><span class="n">address</span> <span class="o">%</span><span class="n">operator</span><span class="p">)</span> <span class="p">(</span><span class="n">nat</span> <span class="o">%</span><span class="n">token_id</span><span class="p">))))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="fa2-views">
+<h2>FA2 Views<a class="headerlink" href="#fa2-views" title="Permalink to this headline">¶</a></h2>
+<p>Checker exposes a number of FA2 views in its contract
+metadata. Standard token views are provided, as are a number of custom
+views provided for integration convenience, e.g. for use by front-end
+applications.</p>
+<div class="section" id="standard-fa2-views">
+<h3>Standard FA2 views<a class="headerlink" href="#standard-fa2-views" title="Permalink to this headline">¶</a></h3>
+<p>The following standard FA2 views are supported:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">get_balance</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">total_supply</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">all_tokens</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">is_operator</span></code></p></li>
+</ul>
+</div>
+<div class="section" id="estimate-yield-when-buying-kit-with-ctez">
+<h3>Estimate yield when buying kit with ctez<a class="headerlink" href="#estimate-yield-when-buying-kit-with-ctez" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">buy_kit_min_kit_expected</span> <span class="pre">:</span> <span class="pre">nat</span> <span class="pre">-&gt;</span> <span class="pre">nat</span></code></p>
+<p>Get the maximum amount (in <code class="docutils literal notranslate"><span class="pre">mukit</span></code>) that can be expected for the given amount of ctez, based on the current market price</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 21%" />
+<col style="width: 66%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Field Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>ctez</p></td>
+<td><p>nat</p></td>
+<td><p>The amount of ctez, in muctez</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="estimate-yield-when-selling-kit-for-ctez">
+<h3>Estimate yield when selling kit for ctez<a class="headerlink" href="#estimate-yield-when-selling-kit-for-ctez" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">sell_kit_min_ctez_expected</span> <span class="pre">:</span> <span class="pre">nat</span> <span class="pre">-&gt;</span> <span class="pre">nat</span></code></p>
+<p>Get the maximum amount (in <code class="docutils literal notranslate"><span class="pre">muctez</span></code>) that can be expected for the given amount of ctez, based on the current market price</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 21%" />
+<col style="width: 66%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Field Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>kit</p></td>
+<td><p>nat</p></td>
+<td><p>The amount of kit, in mukit</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="estimate-kit-requirements-when-adding-liquidity">
+<h3>Estimate kit requirements when adding liquidity<a class="headerlink" href="#estimate-kit-requirements-when-adding-liquidity" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">add_liquidity_max_kit_deposited</span> <span class="pre">:</span> <span class="pre">nat</span> <span class="pre">-&gt;</span> <span class="pre">nat</span></code></p>
+<p>Get the minimum amount (in <code class="docutils literal notranslate"><span class="pre">mukit</span></code>) that needs to be deposited when adding liquidity for the given amount of ctez, based on the current market price</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 21%" />
+<col style="width: 66%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Field Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>ctez</p></td>
+<td><p>nat</p></td>
+<td><p>The amount of ctez, in muctez</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="estimate-yield-when-adding-liquidity">
+<h3>Estimate yield when adding liquidity<a class="headerlink" href="#estimate-yield-when-adding-liquidity" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">add_liquidity_min_lqt_minted</span> <span class="pre">:</span> <span class="pre">nat</span> <span class="pre">-&gt;</span> <span class="pre">nat</span></code></p>
+<p>Get the maximum amount of the liquidity token (in <code class="docutils literal notranslate"><span class="pre">mulqt</span></code>) that can be expected for the given amount of ctez, based on the current market price</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 21%" />
+<col style="width: 66%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Field Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>ctez</p></td>
+<td><p>nat</p></td>
+<td><p>The amount of ctez, in muctez</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="estimate-ctez-yield-when-removing-liquidity">
+<h3>Estimate ctez yield when removing liquidity<a class="headerlink" href="#estimate-ctez-yield-when-removing-liquidity" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">remove_liquidity_min_ctez_withdrawn</span> <span class="pre">:</span> <span class="pre">nat</span> <span class="pre">-&gt;</span> <span class="pre">nat</span></code></p>
+<p>Get the maximum amount of ctez (in <code class="docutils literal notranslate"><span class="pre">muctez</span></code>) that can be expected for the given amount of liquidity token, based on the current market price</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 21%" />
+<col style="width: 66%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Field Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>liquidity</p></td>
+<td><p>nat</p></td>
+<td><p>The amount of liquidity token, in mulqt</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="estimate-kit-yield-when-removing-liquidity">
+<h3>Estimate kit yield when removing liquidity<a class="headerlink" href="#estimate-kit-yield-when-removing-liquidity" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">remove_liquidity_min_kit_withdrawn</span> <span class="pre">:</span> <span class="pre">nat</span> <span class="pre">-&gt;</span> <span class="pre">nat</span></code></p>
+<p>Get the maximum amount of kit (in <code class="docutils literal notranslate"><span class="pre">mukit</span></code>) that can be expected for the given amount of liquidity token, based on the current market price</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 21%" />
+<col style="width: 66%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Field Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>liquidity</p></td>
+<td><p>nat</p></td>
+<td><p>The amount of liquidity token, in mulqt</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="find-maximum-kit-that-can-be-minted">
+<h3>Find maximum kit that can be minted<a class="headerlink" href="#find-maximum-kit-that-can-be-minted" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">burrow_max_mintable_kit</span> <span class="pre">:</span> <span class="pre">nat</span> <span class="pre">-&gt;</span> <span class="pre">nat</span></code></p>
+<p>Returns the maximum amount (in <code class="docutils literal notranslate"><span class="pre">mukit</span></code>) that can be minted from the given burrow.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 21%" />
+<col style="width: 66%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Field Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>id</p></td>
+<td><p>nat</p></td>
+<td><p>The caller’s ID for the burrow</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="check-whether-a-burrow-is-overburrowed">
+<h3>Check whether a burrow is overburrowed<a class="headerlink" href="#check-whether-a-burrow-is-overburrowed" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">is_burrow_overburrowed</span> <span class="pre">:</span> <span class="pre">nat</span> <span class="pre">-&gt;</span> <span class="pre">bool</span></code></p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 21%" />
+<col style="width: 66%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Field Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>id</p></td>
+<td><p>nat</p></td>
+<td><p>The caller’s ID for the burrow</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="check-whether-a-burrow-can-be-liquidated">
+<h3>Check whether a burrow can be liquidated<a class="headerlink" href="#check-whether-a-burrow-can-be-liquidated" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">is_burrow_liquidatable</span> <span class="pre">:</span> <span class="pre">nat</span> <span class="pre">-&gt;</span> <span class="pre">bool</span></code></p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 21%" />
+<col style="width: 66%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Field Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>id</p></td>
+<td><p>nat</p></td>
+<td><p>The caller’s ID for the burrow</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="minimum-bid-for-the-current-liquidation-auction-if-exists">
+<h3>Minimum bid for the current liquidation auction (if exists)<a class="headerlink" href="#minimum-bid-for-the-current-liquidation-auction-if-exists" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">current_liquidation_auction_minimum_bid</span> <span class="pre">:</span> <span class="pre">unit</span> <span class="pre">-&gt;</span> <span class="pre">pair</span> <span class="pre">nat</span> <span class="pre">nat</span></code></p>
+<p>Returns a pair of an identifier to the current auction and a <cite>mukit</cite> amount.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 21%" />
+<col style="width: 66%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Field Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>unit</p></td>
+<td><p>unit</p></td>
+<td><p>()</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="deployment">
+<h2>Deployment<a class="headerlink" href="#deployment" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="deploy-a-lazy-function">
+<h3>Deploy a lazy function<a class="headerlink" href="#deploy-a-lazy-function" title="Permalink to this headline">¶</a></h3>
+<p>Prior to sealing, the bytecode for each lazy function must be deployed.</p>
+<p><code class="docutils literal notranslate"><span class="pre">deployFunction:</span> <span class="pre">(pair</span> <span class="pre">int</span> <span class="pre">bytes)</span></code></p>
+</div>
+<div class="section" id="deploy-metadata">
+<h3>Deploy metadata<a class="headerlink" href="#deploy-metadata" title="Permalink to this headline">¶</a></h3>
+<p>Prior to sealing, the bytecode for all metadata must be deployed.</p>
+<p><code class="docutils literal notranslate"><span class="pre">deployMetadata:</span> <span class="pre">bytes</span></code></p>
+</div>
+<div class="section" id="seal-the-contract-and-make-it-ready-for-use">
+<h3>Seal the contract and make it ready for use<a class="headerlink" href="#seal-the-contract-and-make-it-ready-for-use" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">sealContract:</span> <span class="pre">(pair</span> <span class="pre">address</span> <span class="pre">address)</span></code></p>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="operational.html" class="btn btn-neutral float-right" title="Operational descriptions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="design.html" class="btn btn-neutral float-left" title="Design" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Nomadic Labs / Tweag.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

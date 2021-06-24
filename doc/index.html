@@ -1,0 +1,367 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Checker - A Robocoin System for Tezos &mdash; Checker 0.1alpha documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Introduction" href="introduction.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="#" class="icon icon-home"> Checker
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1alpha
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="design.html">Design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functional_spec.html">Functional Specification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="operational.html">Operational descriptions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="deploying.html">Deploying Checker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="glossary.html">Glossary</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">Checker</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="#" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Checker - A Robocoin System for Tezos</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="checker-a-robocoin-system-for-tezos">
+<h1>Checker - A Robocoin System for Tezos<a class="headerlink" href="#checker-a-robocoin-system-for-tezos" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="introduction.html#what-is-checker">What is Checker?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introduction.html#system-overview-of-a-checker-deployment">System overview of a Checker deployment</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="design.html">Design</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="design.html#concepts">Concepts</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="design.html#the-clock">The clock</a></li>
+<li class="toctree-l3"><a class="reference internal" href="design.html#target-and-quantity">Target and quantity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="design.html#the-instantaneous-drift">The instantaneous drift</a></li>
+<li class="toctree-l3"><a class="reference internal" href="design.html#oracles">Oracles</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="design.html#algorithmic-control">Algorithmic control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="design.html#burrows">Burrows</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="design.html#burrowing-and-overburrowing">Burrowing and overburrowing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="design.html#burrow-fee">Burrow fee</a></li>
+<li class="toctree-l3"><a class="reference internal" href="design.html#imbalance-adjustment">Imbalance adjustment</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="design.html#liquidation">Liquidation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="design.html#liquidation-auction">Liquidation auction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="design.html#cfmm">CFMM</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="functional_spec.html">Functional Specification</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="functional_spec.html#working-with-burrows">Working with burrows</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="functional_spec.html#create-a-burrow">Create a burrow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="functional_spec.html#deposit-collateral-in-a-burrow">Deposit collateral in a burrow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="functional_spec.html#withdraw-collateral-from-a-burrow">Withdraw collateral from a burrow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="functional_spec.html#mint-kit">Mint kit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="functional_spec.html#burn-kit">Burn kit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="functional_spec.html#deactivate-a-burrow">Deactivate a burrow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="functional_spec.html#activate-an-inactive-burrow">Activate an inactive burrow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="functional_spec.html#perform-burrow-maintenance">Perform burrow maintenance</a></li>
+<li class="toctree-l3"><a class="reference internal" href="functional_spec.html#set-the-delegate-for-a-burrow">Set the delegate for a burrow</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="functional_spec.html#cfmm-exchange">CFMM Exchange</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="functional_spec.html#buy-kit-using-ctez">Buy kit using ctez</a></li>
+<li class="toctree-l3"><a class="reference internal" href="functional_spec.html#sell-kit-for-ctez">Sell kit for ctez</a></li>
+<li class="toctree-l3"><a class="reference internal" href="functional_spec.html#provide-liquidity">Provide liquidity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="functional_spec.html#withdraw-liquidity">Withdraw liquidity</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="functional_spec.html#liquidation-auctions">Liquidation Auctions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="functional_spec.html#mark-a-burrow-for-liquidation">Mark a burrow for liquidation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="functional_spec.html#process-completed-liquidation-slices">Process completed liquidation slices</a></li>
+<li class="toctree-l3"><a class="reference internal" href="functional_spec.html#cancel-pending-liquidation-slices">Cancel pending liquidation slices</a></li>
+<li class="toctree-l3"><a class="reference internal" href="functional_spec.html#bid-in-the-current-liquidation-auction">Bid in the current liquidation auction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="functional_spec.html#claim-the-collateral-from-a-winning-auction-bid">Claim the collateral from a winning auction bid</a></li>
+<li class="toctree-l3"><a class="reference internal" href="functional_spec.html#gather-won-collateral-for-a-subsequent-claim">Gather won collateral for a subsequent claim</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="functional_spec.html#maintenance-entrypoints">Maintenance entrypoints</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="functional_spec.html#perform-checker-internal-maintenance">Perform Checker internal maintenance</a></li>
+<li class="toctree-l3"><a class="reference internal" href="functional_spec.html#apply-an-oracle-update">Apply an Oracle update</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="functional_spec.html#fa1-2-interface">FA1.2 Interface</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="functional_spec.html#query-balance">Query balance</a></li>
+<li class="toctree-l3"><a class="reference internal" href="functional_spec.html#update-operators">Update operators</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="functional_spec.html#fa2-views">FA2 Views</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="functional_spec.html#standard-fa2-views">Standard FA2 views</a></li>
+<li class="toctree-l3"><a class="reference internal" href="functional_spec.html#estimate-yield-when-buying-kit-with-ctez">Estimate yield when buying kit with ctez</a></li>
+<li class="toctree-l3"><a class="reference internal" href="functional_spec.html#estimate-yield-when-selling-kit-for-ctez">Estimate yield when selling kit for ctez</a></li>
+<li class="toctree-l3"><a class="reference internal" href="functional_spec.html#estimate-kit-requirements-when-adding-liquidity">Estimate kit requirements when adding liquidity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="functional_spec.html#estimate-yield-when-adding-liquidity">Estimate yield when adding liquidity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="functional_spec.html#estimate-ctez-yield-when-removing-liquidity">Estimate ctez yield when removing liquidity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="functional_spec.html#estimate-kit-yield-when-removing-liquidity">Estimate kit yield when removing liquidity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="functional_spec.html#find-maximum-kit-that-can-be-minted">Find maximum kit that can be minted</a></li>
+<li class="toctree-l3"><a class="reference internal" href="functional_spec.html#check-whether-a-burrow-is-overburrowed">Check whether a burrow is overburrowed</a></li>
+<li class="toctree-l3"><a class="reference internal" href="functional_spec.html#check-whether-a-burrow-can-be-liquidated">Check whether a burrow can be liquidated</a></li>
+<li class="toctree-l3"><a class="reference internal" href="functional_spec.html#minimum-bid-for-the-current-liquidation-auction-if-exists">Minimum bid for the current liquidation auction (if exists)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="functional_spec.html#deployment">Deployment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="functional_spec.html#deploy-a-lazy-function">Deploy a lazy function</a></li>
+<li class="toctree-l3"><a class="reference internal" href="functional_spec.html#deploy-metadata">Deploy metadata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="functional_spec.html#seal-the-contract-and-make-it-ready-for-use">Seal the contract and make it ready for use</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="operational.html">Operational descriptions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="system-parameters.html">System Parameters</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="system-parameters.html#state">State</a></li>
+<li class="toctree-l3"><a class="reference internal" href="system-parameters.html#initialization">Initialization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="system-parameters.html#price-api">Price API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="system-parameters.html#adjustment-index">Adjustment index</a></li>
+<li class="toctree-l3"><a class="reference internal" href="system-parameters.html#touching">Touching</a></li>
+<li class="toctree-l3"><a class="reference internal" href="system-parameters.html#misc">Misc</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="burrow-state-liquidations.html">Burrow State &amp; Liquidation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="burrow-state-liquidations.html#state">State</a></li>
+<li class="toctree-l3"><a class="reference internal" href="burrow-state-liquidations.html#touching">Touching</a></li>
+<li class="toctree-l3"><a class="reference internal" href="burrow-state-liquidations.html#is-a-burrow-collateralized-i-e-not-overburrowed">Is a burrow collateralized (i.e. not overburrowed)?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="burrow-state-liquidations.html#is-a-burrow-a-candidate-for-liquidation">Is a burrow a candidate for liquidation?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="burrow-state-liquidations.html#how-much-collateral-should-we-liquidate">How much collateral should we liquidate?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="burrow-state-liquidations.html#was-the-liquidation-warranted">Was the liquidation warranted?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="burrow-state-liquidations.html#what-if-the-liquidation-was-warranted">What if the liquidation was warranted?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="burrow-state-liquidations.html#misc">Misc</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="liquidation-auction.html">Liquidation Auctions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="liquidation-auction.html#state">State</a></li>
+<li class="toctree-l3"><a class="reference internal" href="liquidation-auction.html#initiating-a-liquidation">Initiating a liquidation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="liquidation-auction.html#cancelling-a-liquidation-slice">Cancelling a liquidation slice</a></li>
+<li class="toctree-l3"><a class="reference internal" href="liquidation-auction.html#lot-auction">Lot auction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="liquidation-auction.html#touching-a-liquidation-slice">Touching a liquidation_slice</a></li>
+<li class="toctree-l3"><a class="reference internal" href="liquidation-auction.html#claiming-a-winning-bid">Claiming a winning bid</a></li>
+<li class="toctree-l3"><a class="reference internal" href="liquidation-auction.html#maintenance">Maintenance</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cfmm.html">CFMM subsystem</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cfmm.html#state">State</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cfmm.html#initialization">Initialization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cfmm.html#general-notes-on-the-interfaces">General notes on the interfaces</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cfmm.html#adding-liquidity">Adding liquidity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cfmm.html#removing-liquidity">Removing liquidity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cfmm.html#buying-kit">Buying Kit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cfmm.html#selling-kit">Selling Kit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cfmm.html#misc">Misc</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="deploying.html">Deploying Checker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="glossary.html">Glossary</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="glossary.html#kit">Kit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="glossary.html#burrow">Burrow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="glossary.html#circulating-kits">Circulating kits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="glossary.html#outstanding-kits">Outstanding kits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="glossary.html#liquidation-lot">Liquidation lot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="glossary.html#liquidation-slice">Liquidation slice</a></li>
+<li class="toctree-l2"><a class="reference internal" href="glossary.html#liquidation-queue">Liquidation queue</a></li>
+<li class="toctree-l2"><a class="reference internal" href="glossary.html#imbalance">Imbalance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="glossary.html#imbalance-adjustment">Imbalance adjustment</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="indices-and-tables">
+<h2>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="introduction.html" class="btn btn-neutral float-right" title="Introduction" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Nomadic Labs / Tweag.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

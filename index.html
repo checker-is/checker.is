@@ -19,6 +19,17 @@
   <body>
     <div class="content">
       <h1>&#x1f67e; Checker - une technologie de robocoin pour Tezos.</h1>
+      <h2>Software</h2>
+      <ul>	   
+         <li>          
+           <h3>Implementation</h3>
+	   <p>An implementation of Checker can be found on <a href="https://github.com/tezos-checker/checker">this repo.</a></p>
+         </li>
+	 <li>
+           <h3>Technical documentation</h3>
+	   <p>For up to date documentation, please make doc from the source above. Nonetheless, here is the <a href="./doc">documentation as of 2021-06-24.</a></p>
+	 </li>
+      </ul>
       <h2>FAQ</h2>
       <ul>
 	<li>
@@ -34,9 +45,9 @@
 	</li>
 	<li>
 	  <h3>Est-ce que checker est un jeton, un "coin", un "stablecoin"?</h3>
-	  <p>Non, Checker est un projet logiciel. Le code défini un jeton et 
+	  <p>Non, Checker est un projet logiciel. Le code définit un jeton et
 	  implémente une logique financière conçue pour attacher sa valeur
-	  à une indice de référence externe.</p>
+	  à un indice de référence externe.</p>
 	</li>
 	<li>
 	  <h3>Est-ce donc un "stablecoin"?</h3>
@@ -51,8 +62,8 @@
 	</li>
 	<li>
 	  <h3>Le mot "robocoin" ne sonne-t-il pas un peu nul?</h3>
-	  <p>Sans doute, mais certainement moins que "stablecoin" et bien plus
-	  précise. Le mot idéal serait "cybercoin", mais Zooko utilise déjà ce
+	  <p>Sans doute, mais certainement moins que "stablecoin" et est bien plus
+	  précis. Le mot idéal serait "cybercoin", mais Zooko utilise déjà ce
 	  mot pour décrire toutes les cryptomonnaies.</p>
 	</li>
 	<li>
@@ -62,7 +73,7 @@
 	  incarnation il ne reste qu'un jeton, le robocoin lui même.</p>
 	</li>
 	<li>
-	  <h3>Checker est-il un amendment du protocol Tezos?</h3>
+	  <h3>Checker est-il un amendement du protocole Tezos?</h3>
 	  <p>Initialement le but était de d'implémenter Checker comme un
 	  smart-contract pur. La version actuelle est bootstrapée par un
 	  smart-contract qui, en lui-même, suffit, mais elle est augmentée
@@ -72,7 +83,7 @@
 	  <h3>Y a-t-il un papier blanc, ou du code source disponible?</h3>
 	  <p>Les détails sont encore privés, mais c'est principalement parce que
 	  s'ils étaient publics, j'aurais trop tendance à ne plus vouloir
-	  changer de modèle, même s'il pouvait en resulter une amélioration.</p>
+	  changer de modèle, même s'il pouvait en résulter une amélioration.</p>
 	</li>
 	<li>
 	  <h3>Qui déveloper Checker?</h3>
@@ -81,22 +92,22 @@
 	<li>
 	  <h3>Checker implémente-t-il un "stablecoin" algorithmique?</h3>
 	  <p>Tout dépend de ce qu'on entend par là. Le projet le plus proche
-	  qui existe à ce jour en terme de construction semble être MakerDAO.
+	  qui existe à ce jour en termes de construction semble être MakerDAO.
 	  </p>
 	</li>
 	<li>
 	  <h3>Checker est-il comme MakerDAO?</h3>
 	  <p>Il y a de nombreuses similarités mais aussi des différences de
 	  conception importantes. En particulier, il n'y a pas de dépendence à
-	  un méchanisme de "global settlement" et Checker peut fonctionner dans
-	  un régime ou la demande pour détenir le robocoin tend à dépasser
+	  un mécanisme de "global settlement" et Checker peut fonctionner dans
+	  un régime où la demande pour détenir le robocoin tend à dépasser
 	  l'offre de tez mis en gage.</p>
 	</li>
 	<li>
 	  <h3>Si un tel logiciel était deployé, cela ne créerait-il pas une
 	  concentration de la boulange sur Tezos?</h3>
 	  <p>Non. Le système est conçu pour que, quand du tez est mis en gage,
-	  les droits de boulanges sont gardé par la partie qui les met en
+	  les droits de boulange soient gardé par la partie qui les met en
 	  gage.</p>
 	</li>
 	<li>
@@ -118,17 +129,17 @@
 	  externes, fournies par des oracles.</p>
 	</li>
 	<li>
-	  <h3>Dépendre d'oracles ne rent-il pas tout cela futile?</h3>
+	  <h3>Dépendre d'oracles ne rend il pas tout cela futile?</h3>
 	  <p>Dépendre d'oracle est regrettable mais, malheureusement, largement
-	  inévitable. Ces oracles peuvent-être, dans une certaine mesure,
-	  décentralisés, ce qui renfoce la stabilité du système, mais on ne peut
+	  inévitable. Ces oracles peuvent être, dans une certaine mesure,
+	  décentralisés, ce qui renforce la stabilité du système, mais on ne peut
 	  pas complètement éliminer le risque de comportement malveillant de la
-	  part des oracles. Malgré cette dépendance, les méchanismes mis en
+	  part des oracles. Malgré cette dépendance, les mécanismes mis en
 	  place minimisent la confiance requise pour utiliser le robocoin.</p>
 	</li>
 	<li>
 	  <h3>Cherchez-vous à concevoir un système utilisant plusieurs formes de
-	  collatétal?</h3>
+	  collatéral?</h3>
 	  <p>Pas particulièrement. Si le collatéral représente un droit sur des
 	  biens ou des services existant en dehors de la chaîne, alors on perd
 	  la résistance à la censure. Les crypto-actifs purs qui ont de la
@@ -142,29 +153,29 @@
 	  fonctionne que si les participants portent plus d'interêt à la
 	  création de "CDP" qu'à la détention de Dai pour son rendement de
 	  commodité. Autrement, le système se retrouve coincé dans une boucle
-	  de "global settlements" du fait d'un plancher à zéro pour la
+	  de "global settlements" du fait d'un plancher à zéro pour le
 	  "stability fee".</p>
 	</li>
 	<li>
-	  <h3>La logique de Checker garanti-t-elle la stabilité d'un robocoin?</h3>
+	  <h3>La logique de Checker garantit-elle la stabilité d'un robocoin?</h3>
 	  <p>Non, c'est impossible. Tous ces systèmes ont un risque résiduel.
-	  Cependant, il ne faudrait pas croire pour autant qu'on a rien fait
+	  Cependant, il ne faudrait pas croire pour autant qu'on n'a rien fait
 	  d'autre que pousser la volatilité dans la queue de la distribution.</p>
 	</li>
 	<li>
 	  <h3>S'il y a du risque, il doit y avoir une prime au risque, comment
 	  peut-il alors il y avoir un arrimage?</h3>
-	  <p>Il y a aussi un rendement de commodité. Pour un certaine quantité
+	  <p>Il y a aussi un rendement de commodité. Pour une certaine quantité
 	  en circulation, les deux se neutralisent.</p>
 	</li>
 	<li>
 	  <h3>Pourquoi le nom "Checker"?</h3>
 	  <ul>
-	    <li>"Checkers" ce sont les dames en Anglais, et le dames sont plus
+	    <li>"Checkers" ce sont les dames en Anglais, et les dames sont plus
 	    simples que les échecs. Le sysème doit être simple à comprendre et
 	    simple à analyser.</li>
 	    <li>Le nom est assez simple à retenir et donne une composante
-	    visuelle intèressante autour des motifs en damier.</li>
+	    visuelle intéressante autour des motifs en damier.</li>
 	  </ul>
 	</li>
 	<li>
@@ -187,7 +198,7 @@
 	</li>
 	<li>
 	  <h3>Puis-je acheter Checker?</h3>
-	  <p>Les codes sources et autres propriétés intellectuelles associèes à
+	  <p>Les codes sources et autres propriétés intellectuelles associées à
 	  Checker ne sont pas à vendre.</p>
 	</li>
 	<li>
@@ -195,7 +206,7 @@
 	  <p>Il n'y a pas de jeton donc, non..</p>
 	</li>
 	<li>
-	  <h3>Il y aura-t-il un jeton?</h3>
+	  <h3>Y aura-t-il un jeton?</h3>
 	  <p>Je ne sais pas, mais probablement que non.</p>
 	</li>
 	<li>

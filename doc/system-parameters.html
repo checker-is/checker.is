@@ -1,0 +1,507 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>System Parameters &mdash; Checker 0.1alpha documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Burrow State &amp; Liquidation" href="burrow-state-liquidations.html" />
+    <link rel="prev" title="Operational descriptions" href="operational.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Checker
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1alpha
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="design.html">Design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functional_spec.html">Functional Specification</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="operational.html">Operational descriptions</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">System Parameters</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#state">State</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#initialization">Initialization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#price-api">Price API</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#note">Note</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#adjustment-index">Adjustment index</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#touching">Touching</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#last-touched"><code class="docutils literal notranslate"><span class="pre">last_touched</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#index"><code class="docutils literal notranslate"><span class="pre">index</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#protected-index"><code class="docutils literal notranslate"><span class="pre">protected_index</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#drift-derivative"><code class="docutils literal notranslate"><span class="pre">drift_derivative</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#drift"><code class="docutils literal notranslate"><span class="pre">drift</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#q"><code class="docutils literal notranslate"><span class="pre">q</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#target"><code class="docutils literal notranslate"><span class="pre">target</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#burrow-fee-index"><code class="docutils literal notranslate"><span class="pre">burrow_fee_index</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#imbalance-index"><code class="docutils literal notranslate"><span class="pre">imbalance_index</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#intermediate-outstanding-kit">Intermediate <code class="docutils literal notranslate"><span class="pre">outstanding_kit</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#accrual-to-cfmm">Accrual to cfmm</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#outstanding-kit"><code class="docutils literal notranslate"><span class="pre">outstanding_kit</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#circulating-kit"><code class="docutils literal notranslate"><span class="pre">circulating_kit</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#misc">Misc</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="burrow-state-liquidations.html">Burrow State &amp; Liquidation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="liquidation-auction.html">Liquidation Auctions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cfmm.html">CFMM subsystem</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="deploying.html">Deploying Checker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="glossary.html">Glossary</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Checker</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="operational.html">Operational descriptions</a> &raquo;</li>
+        
+      <li>System Parameters</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/system-parameters.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="system-parameters">
+<h1>System Parameters<a class="headerlink" href="#system-parameters" title="Permalink to this headline">¶</a></h1>
+<p>A operational description of Checker’s internal parameters, and
+operations on them. NOTE: here we focus primarily on the specifics of
+the calculations; for the meaning of the concepts, see
+<a class="reference internal" href="design.html#design"><span class="std std-ref">Design</span></a>.</p>
+<div class="section" id="state">
+<h2>State<a class="headerlink" href="#state" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">q</span></code>: of type (1 / kit).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">index</span></code>: of type tez.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">protected_index</span></code>: of type tez.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">target</span></code>: TODO: said dimensionless, but I think tez/kit? Hmmm. I
+have to re-check the units of measure.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">drift_derivative</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">drift</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">outstanding_kit</span></code>: approximation of the total amount of kit that
+would be currently required to close all burrows.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">circulating_kit</span></code>: approximation of the total amount of kit that is
+currently in circulation.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">last_touched</span></code>: the last time the parameters were touched.</p></li>
+</ul>
+<p>And two additional indices, one used in the calculation of <em>burrowing
+fees</em> and one in the calculation of the <em>imbalance adjustment</em>:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">burrow_fee_index</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">imbalance_index</span></code></p></li>
+</ul>
+</div>
+<div class="section" id="initialization">
+<h2>Initialization<a class="headerlink" href="#initialization" title="Permalink to this headline">¶</a></h2>
+<p>We currently initialize checker with the following parameters:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">q</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">index</span> <span class="o">=</span> <span class="mi">1</span><span class="n">xtz</span>
+<span class="n">protected_index</span> <span class="o">=</span> <span class="mi">1</span><span class="n">xtz</span>
+<span class="n">target</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">drift</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">drift_derivative</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">outstanding_kit</span> <span class="o">=</span> <span class="mi">0</span><span class="n">mukit</span>
+<span class="n">circulating_kit</span> <span class="o">=</span> <span class="mi">0</span><span class="n">mukit</span>
+<span class="n">last_touched</span> <span class="o">=</span> <span class="n">now</span>
+<span class="n">burrow_fee_index</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">imbalance_index</span>  <span class="o">=</span> <span class="mi">1</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="price-api">
+<h2>Price API<a class="headerlink" href="#price-api" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">tz_minting</span>     <span class="o">=</span> <span class="nb">max</span> <span class="n">index</span> <span class="n">protected_index</span> <span class="p">(</span><span class="ow">in</span> <span class="n">tez</span><span class="p">)</span>
+<span class="n">tz_liquidation</span> <span class="o">=</span> <span class="nb">min</span> <span class="n">index</span> <span class="n">protected_index</span> <span class="p">(</span><span class="ow">in</span> <span class="n">tez</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>To calculate the current prices in (tez/kit), we multiply with the
+current quantity:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">minting_price</span>     <span class="o">=</span> <span class="n">q</span> <span class="o">*</span> <span class="n">tz_minting</span>
+<span class="n">liquidation_price</span> <span class="o">=</span> <span class="n">q</span> <span class="o">*</span> <span class="n">tz_liquidation</span>
+</pre></div>
+</div>
+<div class="section" id="note">
+<h3>Note<a class="headerlink" href="#note" title="Permalink to this headline">¶</a></h3>
+<p>The definition of <code class="docutils literal notranslate"><span class="pre">tz_minting</span></code> and <code class="docutils literal notranslate"><span class="pre">tz_liquidation</span></code> implies that at
+any given moment, <code class="docutils literal notranslate"><span class="pre">tz_minting</span> <span class="pre">&gt;=</span> <span class="pre">tz_liquidation</span> <span class="pre">&gt;</span> <span class="pre">0</span></code>. Combined with
+<code class="docutils literal notranslate"><span class="pre">fminting</span> <span class="pre">&gt;</span> <span class="pre">fliquidation</span></code>, we have that</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">tz_minting</span> <span class="o">*</span> <span class="n">fminting</span> <span class="o">&gt;</span> <span class="n">tz_liquidation</span> <span class="o">*</span> <span class="n">fliquidation</span>
+</pre></div>
+</div>
+<p>which is useful in liquidation logic (see burrow-state-liquidations.md).</p>
+</div>
+</div>
+<div class="section" id="adjustment-index">
+<h2>Adjustment index<a class="headerlink" href="#adjustment-index" title="Permalink to this headline">¶</a></h2>
+<p>The adjustment index, as required by burrowing logic, can be calculated
+from the system parameters as the product of the burrow fee index and
+the imbalance index:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">adjustment_index</span> <span class="o">=</span> <span class="n">burrow_fee_index</span> <span class="o">*</span> <span class="n">imbalance_index</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="touching">
+<h2>Touching<a class="headerlink" href="#touching" title="Permalink to this headline">¶</a></h2>
+<p>Touching the system parameters has the effect of updating all
+aforementioned fields, and calculating the burrowing fees that need to
+be accrued to the cfmm sub-contract. This is done under the assumption
+that we have available the current time <code class="docutils literal notranslate"><span class="pre">now</span></code>, the current index
+<code class="docutils literal notranslate"><span class="pre">index_now</span></code> (calculated by the medianizer), and the current price of
+kit in tez <code class="docutils literal notranslate"><span class="pre">kit_in_tez_now</span></code> (calculated by the cfmm sub-contract). In
+fact, the cfmm sub-contract gives us the one calculated at the end of
+the last block, to make manipulation a little harder. We update each
+field:</p>
+<div class="section" id="last-touched">
+<h3><code class="docutils literal notranslate"><span class="pre">last_touched</span></code><a class="headerlink" href="#last-touched" title="Permalink to this headline">¶</a></h3>
+<p>Update the timestamp from the last time it was touched to now</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">new_last_touched</span> <span class="o">=</span> <span class="n">now</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="index">
+<h3><code class="docutils literal notranslate"><span class="pre">index</span></code><a class="headerlink" href="#index" title="Permalink to this headline">¶</a></h3>
+<p>Update the index from the last time the parameters were touched to the
+current one</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">new_index</span> <span class="o">=</span> <span class="n">index_now</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="protected-index">
+<h3><code class="docutils literal notranslate"><span class="pre">protected_index</span></code><a class="headerlink" href="#protected-index" title="Permalink to this headline">¶</a></h3>
+<p>Update the protected index, by multiplying it with a bounded factor:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">new_protected_index</span> <span class="o">=</span> <span class="n">old_protected_index</span> <span class="o">*</span> <span class="n">clamp</span> <span class="p">(</span><span class="n">current_index</span> <span class="o">/</span> <span class="n">protected_index</span><span class="p">,</span> <span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>where <code class="docutils literal notranslate"><span class="pre">low</span></code> and <code class="docutils literal notranslate"><span class="pre">high</span></code> depend on how much time has passed since the
+last time the parameters were touched, effectively limiting how fast
+<code class="docutils literal notranslate"><span class="pre">protected_index</span></code> can change:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">low</span>  <span class="o">=</span> <span class="n">exp</span> <span class="p">(</span><span class="o">-</span><span class="n">epsilon</span> <span class="o">*</span> <span class="p">(</span><span class="n">now</span> <span class="o">-</span> <span class="n">last_touched</span><span class="p">))</span>
+<span class="n">high</span> <span class="o">=</span> <span class="n">exp</span> <span class="p">(</span><span class="o">+</span><span class="n">epsilon</span> <span class="o">*</span> <span class="p">(</span><span class="n">now</span> <span class="o">-</span> <span class="n">last_touched</span><span class="p">))</span>
+</pre></div>
+</div>
+<p><strong>NOTE</strong>: <code class="docutils literal notranslate"><span class="pre">exp</span> <span class="pre">(x)</span> <span class="pre">=</span> <span class="pre">1</span> <span class="pre">+</span> <span class="pre">x</span></code> here; we expect the contract to be touched
+rather frequently, which keeps the exponent rather small, which makes
+this a good approximation of <code class="docutils literal notranslate"><span class="pre">exp</span></code>.</p>
+</div>
+<div class="section" id="drift-derivative">
+<h3><code class="docutils literal notranslate"><span class="pre">drift_derivative</span></code><a class="headerlink" href="#drift-derivative" title="Permalink to this headline">¶</a></h3>
+<p>For the calculation of the derivative of <code class="docutils literal notranslate"><span class="pre">drift</span></code>,
+<code class="docutils literal notranslate"><span class="pre">drift_derivative</span></code>, we only use the last-observed target (TODO: show
+how we get from the original formula with the logarithms to this?) We
+calculate as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">new_drift_derivative</span> <span class="o">=</span>
+  <span class="o">-</span><span class="mf">0.0005</span> <span class="o">/</span> <span class="p">(</span><span class="n">secs_in_a_day</span> <span class="o">^</span> <span class="mi">2</span><span class="p">)</span> <span class="p">,</span> <span class="k">if</span>                        <span class="n">target</span> <span class="o">&lt;=</span> <span class="n">exp</span> <span class="p">(</span><span class="o">-</span><span class="n">high_bracket</span><span class="p">)</span>
+  <span class="o">-</span><span class="mf">0.0001</span> <span class="o">/</span> <span class="p">(</span><span class="n">secs_in_a_day</span> <span class="o">^</span> <span class="mi">2</span><span class="p">)</span> <span class="p">,</span> <span class="k">if</span> <span class="n">exp</span> <span class="p">(</span><span class="o">-</span><span class="n">high_bracket</span><span class="p">)</span> <span class="o">&lt;</span>  <span class="n">target</span> <span class="o">&lt;=</span> <span class="n">exp</span> <span class="p">(</span><span class="o">-</span><span class="n">low_bracket</span><span class="p">)</span>
+   <span class="mi">0</span>                            <span class="p">,</span> <span class="k">if</span> <span class="n">exp</span> <span class="p">(</span><span class="o">-</span><span class="n">low_bracket</span><span class="p">)</span>  <span class="o">&lt;</span>  <span class="n">target</span> <span class="o">&lt;</span>  <span class="n">exp</span> <span class="p">(</span> <span class="n">low_bracket</span><span class="p">)</span>
+   <span class="mf">0.0001</span> <span class="o">/</span> <span class="p">(</span><span class="n">secs_in_a_day</span> <span class="o">^</span> <span class="mi">2</span><span class="p">)</span> <span class="p">,</span> <span class="k">if</span> <span class="n">exp</span> <span class="p">(</span> <span class="n">low_bracket</span><span class="p">)</span>  <span class="o">&lt;=</span> <span class="n">target</span> <span class="o">&lt;</span>  <span class="n">exp</span> <span class="p">(</span> <span class="n">high_bracket</span><span class="p">)</span>
+   <span class="mf">0.0005</span> <span class="o">/</span> <span class="p">(</span><span class="n">secs_in_a_day</span> <span class="o">^</span> <span class="mi">2</span><span class="p">)</span> <span class="p">,</span> <span class="k">if</span> <span class="n">exp</span> <span class="p">(</span> <span class="n">high_bracket</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">target</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="drift">
+<h3><code class="docutils literal notranslate"><span class="pre">drift</span></code><a class="headerlink" href="#drift" title="Permalink to this headline">¶</a></h3>
+<p>For the calculation of the current drift, we use use the following
+formula:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">new_drift</span> <span class="o">=</span> <span class="n">old_drift</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">old_drift_derivative</span> <span class="o">+</span> <span class="n">new_drift_derivative</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">now</span> <span class="o">-</span> <span class="n">last_touched</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="q">
+<h3><code class="docutils literal notranslate"><span class="pre">q</span></code><a class="headerlink" href="#q" title="Permalink to this headline">¶</a></h3>
+<p>For the calculation of the current quantity <code class="docutils literal notranslate"><span class="pre">q</span></code>, we use the
+following formula:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">new_q</span> <span class="o">=</span> <span class="n">old_q</span>
+      <span class="o">*</span> <span class="n">exp</span> <span class="p">(</span>
+          <span class="p">(</span><span class="n">old_drift</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">6</span><span class="p">)</span> <span class="o">*</span> <span class="p">((</span><span class="mi">2</span> <span class="o">*</span> <span class="n">old_drift_derivative</span><span class="p">)</span> <span class="o">+</span> <span class="n">new_drift_derivative</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">now</span> <span class="o">-</span> <span class="n">last_touched</span><span class="p">))</span>
+          <span class="o">*</span> <span class="p">(</span><span class="n">now</span> <span class="o">-</span> <span class="n">last_touched</span><span class="p">)</span>
+        <span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>NOTE</strong>: <code class="docutils literal notranslate"><span class="pre">exp</span> <span class="pre">(x)</span> <span class="pre">=</span> <span class="pre">1</span> <span class="pre">+</span> <span class="pre">x</span></code> here; TODO: not sure if the exponent is
+small enough for this to be a good approximation.</p>
+</div>
+<div class="section" id="target">
+<h3><code class="docutils literal notranslate"><span class="pre">target</span></code><a class="headerlink" href="#target" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">new_target</span> <span class="o">=</span> <span class="n">new_q</span> <span class="o">*</span> <span class="p">(</span><span class="n">new_index</span> <span class="o">/</span> <span class="n">kit_in_tez_now</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="burrow-fee-index">
+<h3><code class="docutils literal notranslate"><span class="pre">burrow_fee_index</span></code><a class="headerlink" href="#burrow-fee-index" title="Permalink to this headline">¶</a></h3>
+<p>The burrow fee index is updated linearly on the number of seconds that
+have passed since the last time the parameters were touched.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">new_burrow_fee_index</span> <span class="o">=</span> <span class="n">old_burrow_fee_index</span>
+                     <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">burrow_fee_rate</span> <span class="o">*</span> <span class="p">(</span><span class="n">now</span> <span class="o">-</span> <span class="n">last_touched</span><span class="p">)</span> <span class="o">/</span> <span class="n">seconds_in_a_year</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="imbalance-index">
+<h3><code class="docutils literal notranslate"><span class="pre">imbalance_index</span></code><a class="headerlink" href="#imbalance-index" title="Permalink to this headline">¶</a></h3>
+<p>The imbalance index is also updated linearly on the number of seconds
+that have passed since the last time the parameters were touched</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">new_imbalance_index</span> <span class="o">=</span> <span class="n">old_imbalance_index</span>
+                    <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">imbalance_rate</span> <span class="o">*</span> <span class="p">(</span><span class="n">now</span> <span class="o">-</span> <span class="n">last_touched</span><span class="p">)</span> <span class="o">/</span> <span class="n">seconds_in_a_year</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>but <code class="docutils literal notranslate"><span class="pre">imbalance_rate</span></code> varies, depending on the difference between
+<code class="docutils literal notranslate"><span class="pre">old_outstanding_kit</span></code> and <code class="docutils literal notranslate"><span class="pre">old_circulating_kit</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">imbalance_rate</span> <span class="o">=</span>
+  <span class="n">clamp</span>
+    <span class="p">(</span> <span class="n">imbalance_scaling_factor</span> <span class="o">*</span> <span class="p">(</span><span class="n">circulating</span> <span class="o">-</span> <span class="n">outstanding</span><span class="p">)</span> <span class="o">/</span> <span class="n">circulating</span><span class="p">,</span>
+      <span class="o">-</span><span class="n">imbalance_limit</span><span class="p">,</span>
+      <span class="o">+</span><span class="n">imbalance_limit</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+<p>or, equivalently:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">imbalance_rate</span> <span class="o">=</span>
+  <span class="nb">min</span> <span class="p">(</span><span class="n">imbalance_scaling_factor</span> <span class="o">*</span> <span class="p">(</span><span class="n">circulating</span> <span class="o">-</span> <span class="n">outstanding</span><span class="p">)</span> <span class="o">/</span> <span class="n">circulating</span><span class="p">,</span> <span class="o">+</span><span class="n">imbalance_limit</span><span class="p">),</span> <span class="k">if</span> <span class="n">circulating</span> <span class="o">&gt;=</span> <span class="n">outstanding</span>
+  <span class="nb">max</span> <span class="p">(</span><span class="n">imbalance_scaling_factor</span> <span class="o">*</span> <span class="p">(</span><span class="n">circulating</span> <span class="o">-</span> <span class="n">outstanding</span><span class="p">)</span> <span class="o">/</span> <span class="n">circulating</span><span class="p">,</span> <span class="o">-</span><span class="n">imbalance_limit</span><span class="p">),</span> <span class="k">if</span> <span class="n">circulating</span> <span class="o">&lt;</span> <span class="n">outstanding</span>
+</pre></div>
+</div>
+<p>And in the edge cases the <code class="docutils literal notranslate"><span class="pre">imbalance_rate</span></code> is calculated as follows:</p>
+<ul class="simple">
+<li><p>if <code class="docutils literal notranslate"><span class="pre">old_circulating_kit</span> <span class="pre">=</span> <span class="pre">0</span></code> and <code class="docutils literal notranslate"><span class="pre">old_outstanding_kit</span> <span class="pre">=</span> <span class="pre">0</span></code> then
+<code class="docutils literal notranslate"><span class="pre">imbalance_rate</span> <span class="pre">=</span> <span class="pre">0</span></code>.</p></li>
+<li><p>if <code class="docutils literal notranslate"><span class="pre">old_circulating_kit</span> <span class="pre">=</span> <span class="pre">0</span></code> and <code class="docutils literal notranslate"><span class="pre">old_outstanding_kit</span> <span class="pre">&gt;</span> <span class="pre">0</span></code> then
+<code class="docutils literal notranslate"><span class="pre">imbalance_rate</span> <span class="pre">=</span> <span class="pre">-imbalance_limit</span></code>. (the outstanding kit is <em>infinitely</em>
+greater than the circulating kit, so the rate is saturated).</p></li>
+</ul>
+</div>
+<div class="section" id="intermediate-outstanding-kit">
+<h3>Intermediate <code class="docutils literal notranslate"><span class="pre">outstanding_kit</span></code><a class="headerlink" href="#intermediate-outstanding-kit" title="Permalink to this headline">¶</a></h3>
+<p>In order to compute the updates for the two remaining fields
+(<code class="docutils literal notranslate"><span class="pre">outstanding_kit</span></code> and <code class="docutils literal notranslate"><span class="pre">circulating_kit</span></code>), we first need to
+calculate the current amount of kit outstanding, taking into account the
+accrued burrowing fee, thus</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">outstanding_with_fees</span> <span class="o">=</span> <span class="n">old_outstanding_kit</span> <span class="o">*</span> <span class="p">(</span><span class="n">new_burrow_fee_index</span> <span class="o">/</span> <span class="n">old_burrow_fee_index</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="accrual-to-cfmm">
+<h3>Accrual to cfmm<a class="headerlink" href="#accrual-to-cfmm" title="Permalink to this headline">¶</a></h3>
+<p>The accrued burrowing fees are to be given to the cfmm sub-contract. The
+total amount we easily compute as</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">accrual_to_cfmm</span> <span class="o">=</span> <span class="n">outstanding_with_fees</span> <span class="o">-</span> <span class="n">old_outstanding</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="outstanding-kit">
+<h3><code class="docutils literal notranslate"><span class="pre">outstanding_kit</span></code><a class="headerlink" href="#outstanding-kit" title="Permalink to this headline">¶</a></h3>
+<p>To obtain the updated <code class="docutils literal notranslate"><span class="pre">outstanding_kit</span></code>, we need to account for both
+the accrued burrowing fees, and the imbalance adjustment</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">new_outstanding_kit</span> <span class="o">=</span> <span class="n">old_outstanding_kit</span>
+                    <span class="o">*</span> <span class="p">(</span><span class="n">new_burrow_fee_index</span> <span class="o">/</span> <span class="n">old_burrow_fee_index</span><span class="p">)</span>
+                    <span class="o">*</span> <span class="p">(</span><span class="n">new_imbalance_index</span> <span class="o">/</span> <span class="n">old_imbalance_index</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>or equivalently</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">new_outstanding_kit</span> <span class="o">=</span> <span class="n">outstanding_with_fees</span> <span class="o">*</span> <span class="p">(</span><span class="n">new_imbalance_index</span> <span class="o">/</span> <span class="n">old_imbalance_index</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="circulating-kit">
+<h3><code class="docutils literal notranslate"><span class="pre">circulating_kit</span></code><a class="headerlink" href="#circulating-kit" title="Permalink to this headline">¶</a></h3>
+<p>Finally, to obtain the up-to-date <code class="docutils literal notranslate"><span class="pre">circulating_kit</span></code>, we just need to
+record the new kit in circulation, that is, <code class="docutils literal notranslate"><span class="pre">accrual_to_cfmm</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">new_circulating_kit</span> <span class="o">=</span> <span class="n">old_circulating_kit</span> <span class="o">+</span> <span class="n">accrual_to_cfmm</span>
+</pre></div>
+</div>
+<p><strong>NOTE</strong>: If the current timestamp is identical to that stored in the
+parameters, we do not perform any of the above.</p>
+</div>
+</div>
+<div class="section" id="misc">
+<h2>Misc<a class="headerlink" href="#misc" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">seconds_in_a_year</span> <span class="pre">=</span> <span class="pre">31556952</span> <span class="pre">(=</span> <span class="pre">(365</span> <span class="pre">+</span> <span class="pre">1/4</span> <span class="pre">-</span> <span class="pre">1/100</span> <span class="pre">+</span> <span class="pre">1/400)</span> <span class="pre">days</span> <span class="pre">*</span> <span class="pre">24</span> <span class="pre">*</span> <span class="pre">60</span> <span class="pre">*</span> <span class="pre">60)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">seconds_in_a_day</span>&#160; <span class="pre">=</span> <span class="pre">86400</span> <span class="pre">(=</span> <span class="pre">24</span> <span class="pre">*</span> <span class="pre">60</span> <span class="pre">*</span> <span class="pre">60)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">low_bracket</span>&#160; <span class="pre">=</span> <span class="pre">0.005</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">high_bracket</span> <span class="pre">=</span> <span class="pre">0.05</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">imbalance_scaling_factor</span> <span class="pre">=</span> <span class="pre">0.75</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">imbalance_limit</span> <span class="pre">=</span> <span class="pre">0.05</span></code></p></li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="burrow-state-liquidations.html" class="btn btn-neutral float-right" title="Burrow State &amp; Liquidation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="operational.html" class="btn btn-neutral float-left" title="Operational descriptions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Nomadic Labs / Tweag.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

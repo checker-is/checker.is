@@ -1,0 +1,282 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Introduction &mdash; Checker 0.1alpha documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Design" href="design.html" />
+    <link rel="prev" title="Checker - A Robocoin System for Tezos" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Checker
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1alpha
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#what-is-checker">What is Checker?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#system-overview-of-a-checker-deployment">System overview of a Checker deployment</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="design.html">Design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functional_spec.html">Functional Specification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="operational.html">Operational descriptions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="deploying.html">Deploying Checker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="glossary.html">Glossary</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Checker</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Introduction</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/introduction.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="introduction">
+<h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h1>
+<div class="figure align-default">
+<img alt="a kit" src="https://i.imgur.com/3VmpA2q.jpg" />
+</div>
+<div class="section" id="what-is-checker">
+<h2>What is Checker?<a class="headerlink" href="#what-is-checker" title="Permalink to this headline">¶</a></h2>
+<p><strong>Checker</strong> is a generic piece of software for creating <em>robocoins</em> on
+the <a class="reference external" href="https://tezos.com/">Tezos blockchain</a>. It is an open source project
+supported by <a class="reference external" href="https://nomadic-labs.com/">Nomadic Labs</a>,
+<a class="reference external" href="https://tweag.io/">Tweag</a> and TZ Connect Berlin.</p>
+<p>A <em>robocoin</em> is a cryptographic token (or “coin”) that tracks
+an external measure of value, by using various feedback mechanisms to
+algorithmically control its supply. There is no widely accepted
+definition of the term, which has been created for the purpose of this
+document.</p>
+<p>While it may have some similarities, Checker’s robocoin mechanism
+differs from the design of other coin systems which aim to track an
+external value (such as a currency). Coin designs such as those of the
+<a class="reference external" href="https://www.jpmorgan.com/solutions/cib/news/digital-coin-payments">JPM</a>
+and Facebook’s <a class="reference external" href="https://www.theguardian.com/technology/2019/jun/18/what-is-libra-facebook-new-cryptocurrency)">Libra</a>
+relied on regulation by a central authority or administrator, which
+Checker does not require. The Dai stablecoin managed by the <a class="reference external" href="https://makerdao.com/en/">MakerDAO
+project</a> decentralizes its governance,
+using voting to manage the financial risks of Dai and to ensure its
+stability: Checker does not require governance by decentralized voting
+either.</p>
+<p>The Checker system eliminates governance by automating the regulation
+of the robocoin’s value. Specifically, Checker algorithmically
+controls the coin’s supply by creating incentives for creation and
+destruction, in order to maintain a smoothed drift of the value of
+the coin towards that of its external target measure.</p>
+<p>Any number of Checker deployments can exist on a Tezos chain, each
+managing a separate robocoin which tracks a different external measure
+of value.</p>
+</div>
+<div class="section" id="system-overview-of-a-checker-deployment">
+<h2>System overview of a Checker deployment<a class="headerlink" href="#system-overview-of-a-checker-deployment" title="Permalink to this headline">¶</a></h2>
+<img alt="_images/system-diagram.svg" src="_images/system-diagram.svg" /><p>Checker is a single smart contract which is tied at deployment time to
+two external contracts:</p>
+<ol class="arabic simple">
+<li><p>An oracle contract that will be periodically queried for the value
+of its external target measure.</p></li>
+<li><p>The new <a class="reference external" href="https://github.com/tezos-checker/ctez">ctez</a> system,
+which provides the <code class="docutils literal notranslate"><span class="pre">ctez</span></code> token: this token has a value which
+tracks that of Tez itself, but without affording the holder any
+baking rights.</p></li>
+</ol>
+<p>A Checker deployment enables its users to mint and burn its robocoin:
+Checker manages peripheral “burrow” contracts on those users’ behalf, and
+places their Tez collateral deposits there.</p>
+<p>For users who wish to exchange the robocoin with other commodities, or
+who wish to provide liquidity for such exchanges, the deployment
+includes a CFMM (Constant Function Market Maker) facility. This allows
+an exchange between the robocoin and <code class="docutils literal notranslate"><span class="pre">ctez</span></code>.</p>
+<p>Finally, the deployment allows for liquidation of Tez collateral
+against which depositors have minted robocoins, to manage when
+relative prices changes render the collateral insufficient. A batched
+auction mechanism facilitates this liquidation.</p>
+<p>The deployment adjusts the terms for minting, burning and
+collateralising its robocoin algorithmically based on its current
+market price and the target oracle feed, such that the price drifts
+towards the target.</p>
+<p>An FA2 interface is provided for each deployment’s robocoin.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="design.html" class="btn btn-neutral float-right" title="Design" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="index.html" class="btn btn-neutral float-left" title="Checker - A Robocoin System for Tezos" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Nomadic Labs / Tweag.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
